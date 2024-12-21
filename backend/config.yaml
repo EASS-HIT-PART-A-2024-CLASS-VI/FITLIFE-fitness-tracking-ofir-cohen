@@ -1,0 +1,3 @@
+welcome_message: "Welcome to the FastAPI Dockerized Backend"
+api_version: "1.0.0"
+
