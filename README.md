@@ -1,3 +1,1 @@
-
-#yyuuu
 # ofircohen-fitness-tracker
