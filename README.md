@@ -1,4 +1,4 @@
-ofircohen-fitness-tracker
+**ofircohen-fitness-tracker**
 A backend system for fitness and nutrition tracking.
 
 Overview
