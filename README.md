@@ -83,13 +83,17 @@ ofircohen-fitness-tracker/ ├── backend/ │ ├── pycache/ # Python ca
 1. Clone the repository:
    
    git clone https://github.com/your-repo-link.git
+   
    cd ofircohen-fitness-tracker
 
 Build and start the containers:
 
 docker-compose up --build
+
 Access the backend:
+
 API Base URL: http://127.0.0.1:8000
+
 Swagger UI: http://127.0.0.1:8000/docs
 
 **Future Work**
@@ -103,5 +107,7 @@ Mobile App: Develop a cross-platform app using React Native or Flutter.
 If you have questions or suggestions, feel free to reach out:
 
 Name: Ofir Cohen
+
 Email: your_email@example.com
+
 GitHub: Your GitHub Profile """
