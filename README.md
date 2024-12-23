@@ -1,7 +1,7 @@
 # **ofircohen-fitness-tracker**
 
 A robust  system designed to manage fitness and nutrition tracking for users.
----
+
 
 ## **Overview**
 
@@ -91,13 +91,12 @@ ofircohen-fitness-tracker/
 - Install **Docker** and **Docker Compose**.
 
 ### **Steps**
-1. Clone the repository:
+1. **Clone the repository:**
    
-   git clone https://github.com/your-repo-link.git
-   
-   cd ofircohen-fitness-tracker
+   -  git clone https://github.com/your-repo-link.git
+   -   cd ofircohen-fitness-tracker
 
-2. Build and start the containers:
+2. **Build and start the containers:**
 
    docker-compose up --build
 
@@ -109,11 +108,11 @@ Swagger UI: http://127.0.0.1:8000/docs
 
 ### **Future Work**
 
-Frontend Development: Build a frontend application using React or Streamlit.
+**Frontend Development:** Build a frontend application using React or Streamlit.
 
-Authentication: Implement secure user authentication with JWT.
+**Authentication:** Implement secure user authentication with JWT.
 
-Data Visualization: Add charts and graphs for user progress tracking.
+**Data Visualization:** Add charts and graphs for user progress tracking.
 Integration with APIs: Use external APIs for richer features like food databases.
 Mobile App: Develop a cross-platform app using React Native or Flutter.
 
