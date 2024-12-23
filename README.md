@@ -26,19 +26,32 @@ To simplify deployment and scalability, the backend is fully containerized using
 ## **Project Structure**
 
 ofircohen-fitness-tracker/
+
 ├── backend/
+
 │   ├── __pycache__/                     # Python cached files
+
 │   ├── app/
 │   │   ├── __pycache__/                 # Cached files for tests
+
 │   │   ├── integration_test.py          # Integration test file
+
 │   │   ├── integration_test.py.save     # Backup of integration test
+
 │   │   ├── unit_tests.py                # Unit test file
+
 │   ├── Dockerfile                       # Docker configuration for the backend
+
 │   ├── config.yaml                      # Application configuration
+
 │   ├── docker-compose.yml               # Docker Compose for container orchestration
+
 │   ├── main.py                          # FastAPI backend with endpoints
+
 │   ├── requirements.txt                 # Python dependencies
+
 └── README.md                            # Project documentation
+
 
 
 
@@ -117,11 +130,12 @@ Data Visualization: Add charts and graphs for user progress tracking.
 Integration with APIs: Use external APIs for richer features like food databases.
 Mobile App: Develop a cross-platform app using React Native or Flutter.
 
-**Contact**
+ ## **Contact**
+
 If you have questions or suggestions, feel free to reach out:
 
 Name: Ofir Cohen
 
-Email: your_email@example.com
+Email: ofircohen599@gmail.com
 
-GitHub: Your GitHub Profile """
+GitHub: ofiz
