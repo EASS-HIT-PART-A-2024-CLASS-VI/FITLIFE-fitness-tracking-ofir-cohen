@@ -2,12 +2,15 @@ version: "3.8"
 
 services:
   app:
+    # Build Docker image
     build: .
+    # Expose port for external access
     ports:
       - "8000:8000"
+    # Mount the project directory
     volumes:
       - .:/app
+    # Set environment variables for Uvicorn
     environment:
       - UVICORN_HOST=0.0.0.0
-
       - UVICORN_PORT=8000
