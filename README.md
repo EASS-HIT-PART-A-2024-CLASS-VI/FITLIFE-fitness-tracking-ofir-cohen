@@ -80,24 +80,20 @@ GET /training-program
 Description: Recommend a training program based on a fitness goal.
 
 How to Run the Project
-Prerequisites
+Prerequisites:
 Install Docker and Docker Compose.
-Steps
-Clone the Repository:
 
-bash
-Copy code
+step 1 (Clone the Repository):
 git clone https://github.com/your-repo-link.git
 cd ofircohen-fitness-tracker
 Build and Run Containers:
 
-bash
-Copy code
+step 2:
 docker compose up --build
 The backend will be available at: http://127.0.0.1:8000
 API documentation (Swagger UI) is available at: http://127.0.0.1:8000/docs
-Test the Backend:
 
+step 3 (Test the Backend):
 Use the Swagger UI to interact with the API.
 Test endpoints like /recommended-calories and /training-program.
 
