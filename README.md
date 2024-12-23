@@ -26,34 +26,19 @@ To simplify deployment and scalability, the backend is fully containerized using
 ## **Project Structure**
 
 ofircohen-fitness-tracker/
-
 ├── backend/
-
 │   ├── __pycache__/                     # Python cached files
-
 │   ├── app/
 │   │   ├── __pycache__/                 # Cached files for tests
-
 │   │   ├── integration_test.py          # Integration test file
-
 │   │   ├── integration_test.py.save     # Backup of integration test
-
 │   │   ├── unit_tests.py                # Unit test file
-
 │   ├── Dockerfile                       # Docker configuration for the backend
-
 │   ├── config.yaml                      # Application configuration
-
 │   ├── docker-compose.yml               # Docker Compose for container orchestration
-
 │   ├── main.py                          # FastAPI backend with endpoints
-
 │   ├── requirements.txt                 # Python dependencies
-
 └── README.md                            # Project documentation
-
-
-
 
 
 ---
@@ -113,19 +98,22 @@ ofircohen-fitness-tracker/
    
    cd ofircohen-fitness-tracker
 
-Build and start the containers:
+2. Build and start the containers:
 
-docker-compose up --build
+   docker-compose up --build
 
-Access the backend:
+**Access the backend:**
 
 API Base URL: http://127.0.0.1:8000
 
 Swagger UI: http://127.0.0.1:8000/docs
 
-**Future Work**
+### **Future Work**
+
 Frontend Development: Build a frontend application using React or Streamlit.
+
 Authentication: Implement secure user authentication with JWT.
+
 Data Visualization: Add charts and graphs for user progress tracking.
 Integration with APIs: Use external APIs for richer features like food databases.
 Mobile App: Develop a cross-platform app using React Native or Flutter.
