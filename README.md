@@ -25,7 +25,21 @@ To simplify deployment and scalability, the backend is fully containerized using
 
 ## **Project Structure**
 
-ofircohen-fitness-tracker/ ├── backend/ │ ├── pycache/ # Python cached files │ ├── app/ │ │ ├── pycache/ # Cached files for tests │ │ ├── integration_test.py # Integration test file │ │ ├── integration_test.py.save # Backup of integration test │ │ ├── unit_tests.py # Unit test file │ ├── Dockerfile # Docker configuration for the backend │ ├── config.yaml # Application configuration │ ├── docker-compose.yml # Docker Compose for container orchestration │ ├── main.py # FastAPI backend with endpoints │ ├── requirements.txt # Python dependencies └── README.md # Project documentation
+ofircohen-fitness-tracker/
+├── backend/
+│   ├── __pycache__/                     # Python cached files
+│   ├── app/
+│   │   ├── __pycache__/                 # Cached files for tests
+│   │   ├── integration_test.py          # Integration test file
+│   │   ├── integration_test.py.save     # Backup of integration test
+│   │   ├── unit_tests.py                # Unit test file
+│   ├── Dockerfile                       # Docker configuration for the backend
+│   ├── config.yaml                      # Application configuration
+│   ├── docker-compose.yml               # Docker Compose for container orchestration
+│   ├── main.py                          # FastAPI backend with endpoints
+│   ├── requirements.txt                 # Python dependencies
+└── README.md                            # Project documentation
+
 
 
 
