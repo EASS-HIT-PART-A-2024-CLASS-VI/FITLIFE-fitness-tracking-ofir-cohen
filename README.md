@@ -2,7 +2,9 @@ ofircohen-fitness-tracker
 A backend system for fitness and nutrition tracking.
 
 Overview
-The fitness-tracker project is a full-stack application that scrapes, processes, and designed to support fitness and nutrition tracking for users. Built using FastAPI, it provides robust RESTful APIs for managing workouts, nutrition logs, weight logs, and user goals. The backend also includes functionality to calculate personalized daily calorie recommendations based on user input. The entire backend is containerized using Docker for ease of deployment and scalability.
+The ofircohen-fitness-tracker project is a backend system designed to support fitness and nutrition tracking for users. Built using FastAPI, it provides robust RESTful APIs for managing workouts, nutrition logs, weight logs, and user goals. The backend also includes functionality to calculate personalized daily calorie recommendations based on user input. The entire backend is containerized using Docker for ease of deployment and scalability.
+
+This backend serves as the foundation for a potential full-stack application, with plans to integrate a frontend and additional features in future development.
 
 Table of Contents
 Technologies Used
@@ -49,7 +51,6 @@ ofircohen-fitness-tracker\
 │   ├── main.py                          # FastAPI backend with endpoints
 │   ├── requirements.txt                 # Python dependencies
 └── README.md                            # Project documentation
-
 Endpoints (Backend)
 1. General
 GET /
@@ -78,25 +79,27 @@ GET /recommended-calories
 Description: Calculate recommended daily calorie intake based on user data.
 GET /training-program
 Description: Recommend a training program based on a fitness goal.
-
 How to Run the Project
-Prerequisites:
+Prerequisites
 Install Docker and Docker Compose.
+Steps
+Clone the Repository:
 
-step 1 (Clone the Repository):
+bash
+Copy code
 git clone https://github.com/your-repo-link.git
 cd ofircohen-fitness-tracker
 Build and Run Containers:
 
-step 2:
+bash
+Copy code
 docker compose up --build
 The backend will be available at: http://127.0.0.1:8000
 API documentation (Swagger UI) is available at: http://127.0.0.1:8000/docs
+Test the Backend:
 
-step 3 (Test the Backend):
 Use the Swagger UI to interact with the API.
 Test endpoints like /recommended-calories and /training-program.
-
 Future Work
 Frontend Development:
 Build a frontend using React or Streamlit to interact with the backend.
@@ -111,6 +114,6 @@ Develop a mobile app using React Native or Flutter for cross-platform accessibil
 Contact Info
 For any questions or suggestions, please contact:
 Ofir Cohen
-Email: ofircohen599@gmail.com
-GitHub: ofiz
+Email: your_email@example.com
+GitHub: Your GitHub Profile
 
