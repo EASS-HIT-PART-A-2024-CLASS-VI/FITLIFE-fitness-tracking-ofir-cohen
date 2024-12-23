@@ -20,7 +20,7 @@ To simplify deployment and scalability, the backend is fully containerized using
 - **Calorie Recommendation**: Calculate personalized daily calorie requirements based on user data.
 - **RESTful API**: Swagger UI available at `/docs`.
 
----
+```
 
 ## **Project Structure**
 
@@ -40,7 +40,7 @@ ofircohen-fitness-tracker/
 └── README.md                            # Project documentation
 
 
----
+```
 
 ## **Endpoints**
 
