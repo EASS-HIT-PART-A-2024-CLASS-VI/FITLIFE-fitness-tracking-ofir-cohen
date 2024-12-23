@@ -1,7 +1,6 @@
 # **ofircohen-fitness-tracker**
 
-A robust  system designed to manage fitness and nutrition tracking for users, providing RESTful APIs for managing workouts, nutrition logs, weight logs, and fitness goals. This backend includes features like personalized calorie recommendations and training program suggestions, making it a solid foundation for future extensions.
-
+A robust  system designed to manage fitness and nutrition tracking for users.
 ---
 
 ## **Overview**
