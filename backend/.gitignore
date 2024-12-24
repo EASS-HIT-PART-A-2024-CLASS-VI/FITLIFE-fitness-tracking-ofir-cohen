@@ -1,0 +1,48 @@
+# Byte-compiled Python files
+*.py[cod]
+__pycache__/
+*.pyo
+
+# Unit test and integration test cache
+*.pytest_cache/
+*.pytest_cache/*
+integration_test.py.save
+
+# Environment Variables
+.env
+config.yaml
+
+# Logs
+*.log
+
+# Virtual Environment
+venv/
+.env/
+
+# Docker-related files
+*.env
+docker-compose.override.yml
+*.log
+docker-compose.yml.save
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Backup files
+*.bak
+*.swp
+
+# Jupyter Notebook Checkpoints (if used)
+.ipynb_checkpoints/
+
+# Ignore compiled Python files in Docker
+backend/__pycache__/
+backend/app/__pycache__/
+
+# Ignore Python environment files
+*.venv
+.Python
+
+# Ignore node_modules/ (if any frontend is added later)
+node_modules/
