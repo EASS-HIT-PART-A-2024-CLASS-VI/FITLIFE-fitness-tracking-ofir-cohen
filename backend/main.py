@@ -144,29 +144,28 @@ async def scrape_training_program(goal: str = Query(..., description="User's goa
     Dynamically scrape training programs from OneBody website based on user goal.
     """
     try:
-        url = "https://www.onebody.co.il/category/training/plan/"
+        url = "https://www.nerdfitness.com/start-here/"  # Updated URL
+        headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"}
         async with httpx.AsyncClient() as client:
-            response = await client.get(url)
+            response = await client.get(url, headers=headers)
             response.raise_for_status()
             html_content = response.text
 
         soup = BeautifulSoup(html_content, "html.parser")
         programs = []
 
-        training_cards = soup.find_all("div", class_="post")
-        if not training_cards:
-            raise HTTPException(status_code=404, detail="No training programs found on the website.")
-
+        # Update the parsing logic as per the new website structure
+        training_cards = soup.find_all("div", class_="your-card-class")  # Replace with correct class
         for card in training_cards:
-            title = card.find("h2", class_="entry-title")
+            title = card.find("h2")
             link = card.find("a")
-            description = card.find("div", class_="entry-content")
+            description = card.find("p")
 
             # Handle missing elements
             if not title or not link or not description:
                 continue
 
-            if goal.lower() in title.text.strip().lower() or goal.lower() in description.text.strip().lower():
+            if goal.lower() in title.text.lower() or goal.lower() in description.text.lower():
                 programs.append({
                     "title": title.text.strip(),
                     "link": link["href"].strip(),

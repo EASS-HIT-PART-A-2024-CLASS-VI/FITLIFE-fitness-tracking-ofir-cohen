@@ -1,6 +1,6 @@
 fastapi
-uvicorn
-pyyaml
-pytest
 httpx
+pydantic
+PyYAML
 beautifulsoup4
+lxml
