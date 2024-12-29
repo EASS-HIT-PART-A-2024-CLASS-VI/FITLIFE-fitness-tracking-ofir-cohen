@@ -1,4 +1,4 @@
-# **ofircohen-fitness-tracker**
+# **FITLIFE- fitness tracking app by Ofir Cohen **
 
 A robust system designed to manage fitness and nutrition tracking for users, with features like training program recommendations and calorie tracking.
 
@@ -6,7 +6,7 @@ A robust system designed to manage fitness and nutrition tracking for users, wit
 
 ## **Overview**
 
-The **ofircohen-fitness-tracker** is a backend system built using **FastAPI**. It provides APIs to manage user data, track fitness progress, and recommend fitness programs dynamically by scraping external websites or based on predefined logic. The system also calculates personalized calorie recommendations using the **Mifflin-St Jeor Equation**.
+The **ofircohen-fitness-tracker** is a backend system built using **FastAPI**. It provides APIs to manage user data, track fitness progress, and recommend fitness programs dynamically by scraping external websites or based on predefined logic. The system also calculates personalized calorie recommendations.
 
 To ensure smooth deployment and scalability, the backend is fully containerized using **Docker**.
 
@@ -17,9 +17,8 @@ To ensure smooth deployment and scalability, the backend is fully containerized 
 - **Workout Tracking**: Log and retrieve workout data.
 - **Nutrition Logs**: Track calorie intake through daily nutrition entries.
 - **Weight Logs**: Record and monitor user weight over time.
-- **Fitness Goals**: Define user goals and receive recommended training programs.
-- **Calorie Recommendation**: Calculate personalized daily calorie requirements.
-- **Training Program Scraping**: Dynamically scrape training programs from reliable external sources.
+- **Calorie Recommendation**: Calculate personalized daily calorie requirements and set user targets.
+- **Training Program Scraping**: Dynamically scrape training programs from reliable external sources based on user goals.
 - **RESTful API**: Interactive Swagger UI available at `/docs`.
 
 ---
@@ -34,6 +33,9 @@ ofircohen-fitness-tracker/
 │   ├── docker-compose.yml               # Docker Compose for container orchestration
 │   ├── main.py                          # FastAPI backend with endpoints
 │   ├── requirements.txt                 # Python dependencies
+│   ├── app/
+│   │   ├── unit_tests.py                # Pytest unit tests
+│   │   ├── integration_test.py          # Pytest integration tests
 └── README.md                            # Project documentation
 ```
 
@@ -58,11 +60,8 @@ ofircohen-fitness-tracker/
 - **`POST /weight`**: Log weight data for a user.  
 - **`GET /weight/{user_id}`**: Retrieve weight logs for a specific user.
 
-### **Goals**
-- **`POST /goals`**: Add a fitness goal for a user and get recommended training programs.
-
 ### **Utilities**
-- **`GET /recommended-calories`**: Calculate recommended daily calorie intake.  
+- **`GET /recommended-calories`**: Calculate recommended daily calorie intake and set a target for users.  
 - **`GET /scrape-training-program`**: Dynamically scrape training programs based on user goals.
 
 ---
@@ -109,8 +108,26 @@ ofircohen-fitness-tracker/
 ---
 
 ## **Testing**
-- Use Swagger UI for API testing.
-- Ensure web scraping functionality works by testing the `/scrape-training-program` endpoint with valid user goals.
+
+### **Pytest for Backend Tests**
+The backend includes **unit tests** and **integration tests** written using **Pytest**. Here's how to run them:
+
+#### **Unit Tests**
+- The unit tests ensure the functionality of individual endpoints without external dependencies.
+- Run the following command to execute unit tests:
+  ```bash
+  pytest app/unit_tests.py
+  ```
+
+#### **Integration Tests**
+- The integration tests check the complete system functionality, including external dependencies like Docker.
+- Run the following command to execute integration tests:
+  ```bash
+  pytest app/integration_test.py
+  ```
+
+### **Output**
+- Look for the test results in the terminal. Ensure all tests pass successfully before deploying the system.
 
 ---
 
@@ -131,6 +148,3 @@ If you have questions or suggestions, feel free to reach out:
 - **Name**: Ofir Cohen  
 - **Email**: ofircohen599@gmail.com  
 - **GitHub**: [ofiz](https://github.com/ofiz)
-
-
-

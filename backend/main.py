@@ -99,18 +99,6 @@ def get_weight_logs(user_id: int):
         raise HTTPException(status_code=404, detail="No weight logs found for this user")
     return {"user_id": user_id, "weight_logs": weight_logs[user_id]}
 
-# Goals
-@app.post("/goals", summary="Add Fitness Goal", tags=["Goals"])
-def add_goal(goal: Goal):
-    recommended_programs = {
-        "weight loss": "https://madmuscles.com/weight-loss-plan",
-        "muscle gain": "https://madmuscles.com/muscle-gain-plan",
-        "general fitness": "https://madmuscles.com/general-fitness-plan",
-    }
-    goal.recommended_program = recommended_programs.get(goal.goal_type, "No program available")
-    user_goals = users.setdefault(goal.user_id, {}).setdefault("goals", [])
-    user_goals.append(goal)
-    return {"message": "Goal added successfully", "goal": goal}
 
 # Utilities: Recommended Calories
 @app.get("/recommended-calories", summary="Get Recommended Calories", tags=["Utilities"])
@@ -120,6 +108,7 @@ def recommended_calories(
     height: float = Query(..., description="User's height in cm"),
     gender: str = Query(..., description="User's gender (male or female)"),
     activity_level: str = Query(..., description="Activity level (low, medium, high)"),
+    target: Optional[str] = Query(None, description="User's fitness target (e.g., weight loss, muscle gain)")
 ):
     try:
         activity_level_mapping = {"low": 1.2, "medium": 1.55, "high": 1.9}
@@ -133,47 +122,58 @@ def recommended_calories(
             else (10 * weight + 6.25 * height - 5 * age - 161)
         )
         total_calories = bmr * activity_level_mapping[activity_level.lower()]
-        return {"recommended_calories": round(total_calories, 2)}
+        
+        return {
+            "recommended_calories": round(total_calories, 2),
+            "target": target if target else "No specific target provided"
+        }
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
 
 # Scrape Training Programs
 @app.get("/scrape-training-program", summary="Get Training Program", tags=["Training"])
-async def scrape_training_program(goal: str = Query(..., description="User's goal (e.g., weight loss, muscle gain, general fitness)")):
+async def scrape_training_program(goal: str = Query(None, description="User's goal (e.g., weight loss, muscle gain, general fitness)")):
     """
-    Dynamically scrape training programs from OneBody website based on user goal.
+    Dynamically scrape training programs from Muscle & Strength based on user goal.
     """
     try:
-        url = "https://www.nerdfitness.com/start-here/"  # Updated URL
+        base_url = "https://www.muscleandstrength.com/workout-routines"
         headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"}
         async with httpx.AsyncClient() as client:
-            response = await client.get(url, headers=headers)
+            response = await client.get(base_url, headers=headers)
             response.raise_for_status()
             html_content = response.text
 
         soup = BeautifulSoup(html_content, "html.parser")
         programs = []
 
-        # Update the parsing logic as per the new website structure
-        training_cards = soup.find_all("div", class_="your-card-class")  # Replace with correct class
-        for card in training_cards:
-            title = card.find("h2")
-            link = card.find("a")
-            description = card.find("p")
+        # Find all workout cards on the page
+        workout_cards = soup.find_all("div", class_="workout-card")
+        for card in workout_cards:
+            title_tag = card.find("h3")
+            link_tag = card.find("a", href=True)
+            description_tag = card.find("div", class_="workout-meta")
 
-            # Handle missing elements
-            if not title or not link or not description:
-                continue
+            if title_tag and link_tag and description_tag:
+                title = title_tag.text.strip()
+                link = f"https://www.muscleandstrength.com{link_tag['href']}"
+                description = description_tag.text.strip()
 
-            if goal.lower() in title.text.lower() or goal.lower() in description.text.lower():
-                programs.append({
-                    "title": title.text.strip(),
-                    "link": link["href"].strip(),
-                    "description": description.text.strip()
-                })
+                if goal and goal.lower() in title.lower():
+                    programs.append({
+                        "title": title,
+                        "link": link,
+                        "description": description
+                    })
 
+        # If no matching programs are found, add a default program
         if not programs:
-            raise HTTPException(status_code=404, detail="No training programs match the specified goal.")
+            default_program = {
+                "title": "Full Body Strength Training Program",
+                "link": "https://www.muscleandstrength.com/workouts/full-body-strength-training",
+                "description": "A great default program for overall fitness and strength."
+            }
+            programs.append(default_program)
 
         return {"goal": goal, "training_programs": programs}
 
