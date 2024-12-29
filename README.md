@@ -6,7 +6,7 @@ A robust system designed to manage fitness and nutrition tracking for users, wit
 
 ## **Overview**
 
-The **ofircohen-fitness-tracker** is a backend system built using **FastAPI**. It provides APIs to manage user data, track fitness progress, and recommend fitness programs dynamically by scraping external websites or based on predefined logic. The system also calculates personalized calorie recommendations.
+The project is a fullstack application built using **FastAPI**. It provides APIs to manage user data, track fitness progress, and recommend fitness programs dynamically by scraping external websites or based on predefined logic. The system also calculates personalized calorie recommendations.
 
 To ensure smooth deployment and scalability, the backend is fully containerized using **Docker**.
 
