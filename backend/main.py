@@ -1,9 +1,12 @@
-from fastapi import FastAPI, HTTPException, Query
+from fastapi import FastAPI, HTTPException, Query, Depends
 from pydantic import BaseModel, Field
 from typing import Optional, Dict, Any
 import yaml
 import httpx
 from bs4 import BeautifulSoup
+from sqlalchemy import create_engine, Column, Integer, String, Float, Table, MetaData
+from sqlalchemy.orm import declarative_base
+from sqlalchemy.orm import sessionmaker, Session
 
 # Load configuration from YAML file
 try:
@@ -19,11 +22,53 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# In-memory storage to simulate a database
-users = {}
-workouts = {}
-nutrition_logs = {}
-weight_logs = {}
+# SQLite Database setup
+DATABASE_URL = "sqlite:///./fitness_tracker.db"
+engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+Base = declarative_base()
+
+# Database Models
+class UserDB(Base):
+    __tablename__ = "users"
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, nullable=False)
+    age = Column(Integer, nullable=False)
+    gender = Column(String, nullable=True)
+    height = Column(Float, nullable=True)
+    weight = Column(Float, nullable=True)
+
+class WorkoutDB(Base):
+    __tablename__ = "workouts"
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, nullable=False)
+    exercise = Column(String, nullable=False)
+    duration = Column(Integer, nullable=False)
+
+class NutritionLogDB(Base):
+    __tablename__ = "nutrition_logs"
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, nullable=False)
+    food = Column(String, nullable=False)
+    calories = Column(Integer, nullable=False)
+
+class WeightLogDB(Base):
+    __tablename__ = "weight_logs"
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, nullable=False)
+    weight = Column(Float, nullable=False)
+    date = Column(String, nullable=False)
+
+# Create tables
+Base.metadata.create_all(bind=engine)
+
+# Dependency to get database session
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
 
 # Models for data validation
 class User(BaseModel):
@@ -32,7 +77,6 @@ class User(BaseModel):
     gender: Optional[str] = Field(None, description="Gender of the user")
     height: Optional[float] = Field(None, description="Height in cm")
     weight: Optional[float] = Field(None, description="Weight in kg")
-    additional_info: Optional[Dict[str, Any]] = None
 
 class Workout(BaseModel):
     user_id: int
@@ -49,13 +93,6 @@ class WeightLog(BaseModel):
     weight: float
     date: str
 
-class Goal(BaseModel):
-    user_id: int
-    goal_type: str
-    target: float
-    deadline: str
-    recommended_program: Optional[str] = None
-
 # General Endpoints
 @app.get("/", summary="Root Endpoint", tags=["General"])
 def read_root():
@@ -63,42 +100,85 @@ def read_root():
 
 # User Management
 @app.post("/users", summary="Create User", tags=["Users"])
-def create_user(user_id: int, user: User):
-    if user_id in users:
-        raise HTTPException(status_code=400, detail="User already exists")
-    users[user_id] = user
-    return {"user_id": user_id, "user": user}
+def create_user(user: User, db: Session = Depends(get_db)):
+    db_user = UserDB(
+        name=user.name,
+        age=user.age,
+        gender=user.gender,
+        height=user.height,
+        weight=user.weight
+    )
+    db.add(db_user)
+    db.commit()
+    db.refresh(db_user)
+    return {"message": "User created successfully", "user": db_user}
+
+@app.get("/users/{user_id}", summary="Get User", tags=["Users"])
+def get_user(user_id: int, db: Session = Depends(get_db)):
+    db_user = db.query(UserDB).filter(UserDB.id == user_id).first()
+    if not db_user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return {"user": db_user}
 
 # Workouts
 @app.post("/workouts", summary="Add Workout", tags=["Workouts"])
-def add_workout(workout: Workout):
-    workouts.setdefault(workout.user_id, []).append(workout)
-    return {"message": "Workout added successfully", "workout": workout}
+def add_workout(workout: Workout, db: Session = Depends(get_db)):
+    db_workout = WorkoutDB(
+        user_id=workout.user_id,
+        exercise=workout.exercise,
+        duration=workout.duration
+    )
+    db.add(db_workout)
+    db.commit()
+    db.refresh(db_workout)
+    return {"message": "Workout added successfully", "workout": db_workout}
 
 @app.get("/workouts/{user_id}", summary="Get Workouts", tags=["Workouts"])
-def get_workouts(user_id: int):
-    if user_id not in workouts:
+def get_workouts(user_id: int, db: Session = Depends(get_db)):
+    workouts = db.query(WorkoutDB).filter(WorkoutDB.user_id == user_id).all()
+    if not workouts:
         raise HTTPException(status_code=404, detail="No workouts found for this user")
-    return {"user_id": user_id, "workouts": workouts[user_id]}
+    return {"user_id": user_id, "workouts": workouts}
 
 # Nutrition Logs
 @app.post("/nutrition", summary="Add Nutrition Log", tags=["Nutrition"])
-def add_nutrition_log(log: NutritionLog):
-    nutrition_logs.setdefault(log.user_id, []).append(log)
-    return {"message": "Nutrition log added successfully", "log": log}
+def add_nutrition_log(log: NutritionLog, db: Session = Depends(get_db)):
+    db_log = NutritionLogDB(
+        user_id=log.user_id,
+        food=log.food,
+        calories=log.calories
+    )
+    db.add(db_log)
+    db.commit()
+    db.refresh(db_log)
+    return {"message": "Nutrition log added successfully", "log": db_log}
+
+@app.get("/nutrition/{user_id}", summary="Get Nutrition Logs", tags=["Nutrition"])
+def get_nutrition_logs(user_id: int, db: Session = Depends(get_db)):
+    logs = db.query(NutritionLogDB).filter(NutritionLogDB.user_id == user_id).all()
+    if not logs:
+        raise HTTPException(status_code=404, detail="No nutrition logs found for this user")
+    return {"user_id": user_id, "logs": logs}
 
 # Weight Logs
 @app.post("/weight", summary="Add Weight Log", tags=["Weight"])
-def add_weight_log(weight_log: WeightLog):
-    weight_logs.setdefault(weight_log.user_id, []).append(weight_log)
-    return {"message": "Weight log added successfully", "log": weight_log}
+def add_weight_log(weight_log: WeightLog, db: Session = Depends(get_db)):
+    db_log = WeightLogDB(
+        user_id=weight_log.user_id,
+        weight=weight_log.weight,
+        date=weight_log.date
+    )
+    db.add(db_log)
+    db.commit()
+    db.refresh(db_log)
+    return {"message": "Weight log added successfully", "log": db_log}
 
 @app.get("/weight/{user_id}", summary="Get Weight Logs", tags=["Weight"])
-def get_weight_logs(user_id: int):
-    if user_id not in weight_logs:
+def get_weight_logs(user_id: int, db: Session = Depends(get_db)):
+    logs = db.query(WeightLogDB).filter(WeightLogDB.user_id == user_id).all()
+    if not logs:
         raise HTTPException(status_code=404, detail="No weight logs found for this user")
-    return {"user_id": user_id, "weight_logs": weight_logs[user_id]}
-
+    return {"user_id": user_id, "logs": logs}
 
 # Utilities: Recommended Calories
 @app.get("/recommended-calories", summary="Get Recommended Calories", tags=["Utilities"])

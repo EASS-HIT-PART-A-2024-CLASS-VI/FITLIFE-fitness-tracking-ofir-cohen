@@ -2,8 +2,8 @@ from fastapi.testclient import TestClient
 import sys
 import os
 
-# Add the root directory to the Python path
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+# Ensure the correct path is added for module resolution
+sys.path.insert(0, os.path.abspath(os.path.dirname(__file__) + "/../"))
 
 from main import app
 
@@ -13,7 +13,6 @@ def test_read_root():
     response = client.get("/")
     assert response.status_code == 200
     assert "message" in response.json()
-
 
 def test_create_user():
     user_data = {
@@ -27,25 +26,23 @@ def test_create_user():
     assert response.status_code == 200
     assert response.json()["user"]["name"] == "John Doe"
 
-
 def test_add_workout():
     workout_data = {"user_id": 1, "exercise": "Running", "duration": 30}
     response = client.post("/workouts", json=workout_data)
     assert response.status_code == 200
     assert response.json()["message"] == "Workout added successfully"
 
-
 def test_get_workouts():
     response = client.get("/workouts/1")
     assert response.status_code == 200
     assert "workouts" in response.json()
-
 
 def test_add_nutrition_log():
     nutrition_data = {"user_id": 1, "food": "Chicken Salad", "calories": 400}
     response = client.post("/nutrition", json=nutrition_data)
     assert response.status_code == 200
     assert response.json()["message"] == "Nutrition log added successfully"
+
 
 
 def test_get_weight_logs():
@@ -56,7 +53,9 @@ def test_get_weight_logs():
     # Test retrieving weight logs
     response = client.get("/weight/1")
     assert response.status_code == 200
-    assert "weight_logs" in response.json()
+    assert "logs" in response.json()  # Updated to match the response
+    assert len(response.json()["logs"]) > 0
+
 
 
 def test_recommended_calories():
