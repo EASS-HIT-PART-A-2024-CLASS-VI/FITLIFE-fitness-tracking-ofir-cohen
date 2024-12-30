@@ -1,25 +1,25 @@
-# **FITLIFE- fitness tracking app by Ofir Cohen **
+# **FitLife - Fitness Tracking App by Ofir Cohen**
 
-A robust system designed to manage fitness and nutrition tracking for users, with features like training program recommendations and calorie tracking.
+A professional fitness and nutrition tracking system designed to help users monitor their progress, achieve their fitness goals, and maintain a healthy lifestyle. Featuring calorie tracking, personalized training recommendations, and persistent data storage.
 
 ---
 
 ## **Overview**
 
-The project is a fullstack application built using **FastAPI**. It provides APIs to manage user data, track fitness progress, and recommend fitness programs dynamically by scraping external websites or based on predefined logic. The system also calculates personalized calorie recommendations.
+The **FitLife** application is a comprehensive full-stack backend system built using **FastAPI**. It offers a wide range of features, including user data management, fitness progress tracking, and training program recommendations, dynamically sourced from external websites. The system also provides personalized calorie recommendations based on user metrics and fitness goals.
 
-To ensure smooth deployment and scalability, the backend is fully containerized using **Docker**.
+To ensure scalability and maintainability, the backend is fully containerized with **Docker**.
 
 ---
 
 ## **Key Features**
-- **User Management**: Create and manage user profiles.
-- **Workout Tracking**: Log and retrieve workout data.
-- **Nutrition Logs**: Track calorie intake through daily nutrition entries.
-- **Weight Logs**: Record and monitor user weight over time.
-- **Calorie Recommendation**: Calculate personalized daily calorie requirements and set user targets.
+- **Persistent User Management**: Create and manage user profiles with long-term data storage using SQLite.
+- **Workout Tracking**: Log and retrieve detailed workout records for users.
+- **Nutrition Logs**: Track daily calorie intake with nutrition logs.
+- **Weight Logs**: Record and monitor weight data over time for better progress tracking.
+- **Calorie Recommendation**: Calculate and recommend personalized daily calorie intake.
 - **Training Program Scraping**: Dynamically scrape training programs from reliable external sources based on user goals.
-- **RESTful API**: Interactive Swagger UI available at `/docs`.
+- **RESTful API**: Interactive API documentation with Swagger UI available at `/docs`.
 
 ---
 
@@ -31,6 +31,7 @@ ofircohen-fitness-tracker/
 │   ├── Dockerfile                       # Docker configuration for the backend
 │   ├── config.yaml                      # Application configuration
 │   ├── docker-compose.yml               # Docker Compose for container orchestration
+│   ├── fitness_tracker.db               # SQLite database for persistent storage
 │   ├── main.py                          # FastAPI backend with endpoints
 │   ├── requirements.txt                 # Python dependencies
 │   ├── app/
@@ -48,6 +49,7 @@ ofircohen-fitness-tracker/
 
 ### **Users**
 - **`POST /users`**: Create a new user profile.
+- **`GET /users/{user_id}`**: Retrieve user details by ID.
 
 ### **Workouts**
 - **`POST /workouts`**: Log a workout for a user.  
@@ -55,13 +57,14 @@ ofircohen-fitness-tracker/
 
 ### **Nutrition Logs**
 - **`POST /nutrition`**: Log a nutrition entry for a user.
+- **`GET /nutrition/{user_id}`**: Retrieve all nutrition logs for a specific user.
 
 ### **Weight Logs**
 - **`POST /weight`**: Log weight data for a user.  
 - **`GET /weight/{user_id}`**: Retrieve weight logs for a specific user.
 
 ### **Utilities**
-- **`GET /recommended-calories`**: Calculate recommended daily calorie intake and set a target for users.  
+- **`GET /recommended-calories`**: Calculate personalized daily calorie intake and set a target for users.  
 - **`GET /scrape-training-program`**: Dynamically scrape training programs based on user goals.
 
 ---
@@ -69,15 +72,16 @@ ofircohen-fitness-tracker/
 ## **Technologies Used**
 
 ### **Backend**
-- **Python 3.9+**: The core language for backend development.
-- **FastAPI**: A modern and fast web framework for building APIs.
+- **Python 3.9+**: Core backend development language.
+- **FastAPI**: A modern web framework for building APIs quickly and efficiently.
 - **Pydantic**: For data validation and configuration management.
+- **SQLAlchemy**: ORM for managing database interactions.
+- **SQLite**: Lightweight database for persistent data storage.
 - **httpx**: For asynchronous HTTP requests.
 - **BeautifulSoup**: For web scraping.
-- **CORS Middleware**: To enable frontend-backend communication.
 
 ### **Containerization**
-- **Docker**: Simplifies application deployment with containerization.
+- **Docker**: Simplifies deployment with containerized environments.
 - **Docker Compose**: Orchestrates multi-container services.
 
 ---
@@ -86,17 +90,16 @@ ofircohen-fitness-tracker/
 
 ### **Prerequisites**
 - Install **Docker** and **Docker Compose**.
+- Install **Python 3.9+** (if running locally without Docker).
 
 ### **Steps**
 1. **Clone the repository:**
-
    ```bash
    git clone https://github.com/your-repo-link.git
    cd ofircohen-fitness-tracker
    ```
 
 2. **Build and start the containers:**
-
    ```bash
    docker-compose up --build
    ```
@@ -105,45 +108,47 @@ ofircohen-fitness-tracker/
    - **API Base URL:** [http://127.0.0.1:8000](http://127.0.0.1:8000)
    - **Swagger UI:** [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
 
+4. **Run the Application Locally (Optional):**
+   ```bash
+   uvicorn main:app --reload
+   ```
+
 ---
 
 ## **Testing**
 
-### **Pytest for Backend Tests**
-The backend includes **unit tests** and **integration tests** written using **Pytest**. Here's how to run them:
-
-#### **Unit Tests**
-- The unit tests ensure the functionality of individual endpoints without external dependencies.
-- Run the following command to execute unit tests:
+### **Unit Tests**
+- Test individual endpoints and internal logic without external dependencies:
   ```bash
   pytest app/unit_tests.py
   ```
 
-#### **Integration Tests**
-- The integration tests check the complete system functionality, including external dependencies like Docker.
-- Run the following command to execute integration tests:
+### **Integration Tests**
+- Test the system as a whole, including interactions with external services:
   ```bash
   pytest app/integration_test.py
   ```
-
-### **Output**
-- Look for the test results in the terminal. Ensure all tests pass successfully before deploying the system.
 
 ---
 
 ## **Future Work**
 
-1. **Frontend Development:** Build a frontend application using React or Streamlit.
-2. **Authentication:** Implement secure user authentication with JWT.
-3. **Data Visualization:** Add charts and graphs for user progress tracking.
-4. **Enhanced Scraping Logic:** Integrate error handling for changes in website structure.
-5. **Mobile App Development:** Create a cross-platform mobile app using React Native or Flutter.
+1. **Frontend Development**:
+   - Build an interactive user interface using React or Streamlit.
+2. **User Authentication**:
+   - Implement secure user authentication with JWT.
+3. **Data Visualization**:
+   - Add graphs and charts for fitness progress tracking.
+4. **Enhanced Scraping**:
+   - Add error handling for dynamic changes in website structures.
+5. **Mobile App Development**:
+   - Create a cross-platform mobile app using Flutter or React Native.
 
 ---
 
 ## **Contact**
 
-If you have questions or suggestions, feel free to reach out:
+For questions, suggestions, or feedback, please reach out:
 
 - **Name**: Ofir Cohen  
 - **Email**: ofircohen599@gmail.com  
