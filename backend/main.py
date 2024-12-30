@@ -4,9 +4,8 @@ from typing import Optional, Dict, Any
 import yaml
 import httpx
 from bs4 import BeautifulSoup
-from sqlalchemy import create_engine, Column, Integer, String, Float, Table, MetaData
-from sqlalchemy.orm import declarative_base
-from sqlalchemy.orm import sessionmaker, Session
+from sqlalchemy import create_engine, Column, Integer, String, Float
+from sqlalchemy.orm import declarative_base, sessionmaker, Session
 
 # Load configuration from YAML file
 try:
@@ -202,7 +201,6 @@ def recommended_calories(
             else (10 * weight + 6.25 * height - 5 * age - 161)
         )
         total_calories = bmr * activity_level_mapping[activity_level.lower()]
-        
         return {
             "recommended_calories": round(total_calories, 2),
             "target": target if target else "No specific target provided"
