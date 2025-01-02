@@ -6,6 +6,7 @@ import httpx
 from bs4 import BeautifulSoup
 from sqlalchemy import create_engine, Column, Integer, String, Float
 from sqlalchemy.orm import declarative_base, sessionmaker, Session
+from fastapi.middleware.cors import CORSMiddleware
 
 # Load configuration from YAML file
 try:
@@ -19,6 +20,20 @@ app = FastAPI(
     title="Fitness and Nutrition Tracking API",
     description="A FastAPI backend application for tracking users, workouts, nutrition logs, weight logs, goals, and training programs.",
     version="1.0.0"
+)
+
+# CORS middleware setup
+origins = [
+    "http://localhost:3000",  # React frontend
+    "http://127.0.0.1:3000"   # Alternative local frontend address
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"]
 )
 
 # SQLite Database setup
@@ -211,9 +226,6 @@ def recommended_calories(
 # Scrape Training Programs
 @app.get("/scrape-training-program", summary="Get Training Program", tags=["Training"])
 async def scrape_training_program(goal: str = Query(None, description="User's goal (e.g., weight loss, muscle gain, general fitness)")):
-    """
-    Dynamically scrape training programs from Muscle & Strength based on user goal.
-    """
     try:
         base_url = "https://www.muscleandstrength.com/workout-routines"
         headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"}

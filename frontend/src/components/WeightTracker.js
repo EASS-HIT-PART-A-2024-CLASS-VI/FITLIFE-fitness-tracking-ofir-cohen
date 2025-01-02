@@ -1,39 +1,29 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import Graph from './graph';
 
 const WeightTracker = () => {
-  const [logs, setLogs] = useState([]);
-  const [weight, setWeight] = useState('');
-  const [date, setDate] = useState('');
+  const [weights, setWeights] = useState([]);
+  const [dates, setDates] = useState([]);
 
-  const addLog = () => {
-    const log = { weight: parseFloat(weight), date };
-    setLogs([...logs, log]);
-    setWeight('');
-    setDate('');
-  };
+  useEffect(() => {
+    const fetchWeights = async () => {
+      try {
+        const response = await axios.get('http://localhost:8000/weight/1'); // Replace '1' with user ID
+        const logs = response.data.logs;
+        setWeights(logs.map(log => log.weight));
+        setDates(logs.map(log => log.date));
+      } catch (error) {
+        console.error('Error fetching weight data:', error);
+      }
+    };
+    fetchWeights();
+  }, []);
 
   return (
     <div>
       <h1>Weight Tracker</h1>
-      <div>
-        <input 
-          type="number" 
-          placeholder="Weight" 
-          value={weight} 
-          onChange={(e) => setWeight(e.target.value)} 
-        />
-        <input 
-          type="date" 
-          value={date} 
-          onChange={(e) => setDate(e.target.value)} 
-        />
-        <button onClick={addLog}>Add Log</button>
-      </div>
-      <ul>
-        {logs.map((log, index) => (
-          <li key={index}>{log.date}: {log.weight} kg</li>
-        ))}
-      </ul>
+      <Graph data={weights} labels={dates} title="Weight Progress" />
     </div>
   );
 };
