@@ -1,17 +1,18 @@
-# Use a lightweight Node.js image
-FROM node:16-alpine
+FROM node:20-alpine
 
-# Set the working directory inside the container
+# Set working directory
 WORKDIR /app
 
-# Copy package.json and install dependencies
+# Copy package.json and package-lock.json
 COPY package*.json ./
-RUN npm install
 
-# Copy the rest of the application
+# Install dependencies
+RUN npm cache clean --force && npm install --legacy-peer-deps
+
+# Copy application files
 COPY . .
 
-# Expose port 3000 for the React app
+# Expose port
 EXPOSE 3000
 
 # Start the application

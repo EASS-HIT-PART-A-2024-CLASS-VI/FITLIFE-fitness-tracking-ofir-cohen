@@ -1,21 +1,22 @@
 version: "3.8"
+
 services:
   backend:
     build:
-      context: ./backend  # Adjusted for the backend path
-      dockerfile: Dockerfile
-    volumes:
-      - ./backend:/app
+      context: ./backend
     ports:
       - "8000:8000"
-    command: uvicorn main:app --host 0.0.0.0 --port 8000
+    volumes:
+      - ./backend:/app
+    environment:
+      - PYTHONUNBUFFERED=1
 
   frontend:
     build:
-      context: ./frontend  # Adjusted for the frontend path
-      dockerfile: Dockerfile
-    volumes:
-      - ./frontend:/app
+      context: ./frontend
     ports:
       - "3000:3000"
-    command: npm start
+    volumes:
+      - ./frontend:/app
+    stdin_open: true
+    tty: true
