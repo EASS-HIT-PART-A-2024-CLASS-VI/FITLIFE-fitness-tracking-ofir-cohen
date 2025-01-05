@@ -7,21 +7,19 @@ import NutritionTracker from './components/NutritionTracker';
 import WeightTracker from './components/WeightTracker';
 import CalorieRecommendations from './components/CalorieRecommendations';
 import TrainingPrograms from './components/TrainingPrograms';
+import './App.css'; // For any global styles
 
 const App = () => {
   return (
     <Router>
-      <header>
-        <h1>Welcome to FITLIFE</h1>
-      </header>
-      <nav>
-        <Link to="/">Dashboard</Link>
-        <Link to="/user-management">User Management</Link>
-        <Link to="/workout-tracker">Workout Tracker</Link>
-        <Link to="/nutrition-tracker">Nutrition Tracker</Link>
-        <Link to="/weight-tracker">Weight Tracker</Link>
-        <Link to="/calorie-recommendations">Calorie Recommendations</Link>
-        <Link to="/training-programs">Training Programs</Link>
+      <nav className="app-nav">
+        <Link to="/" className="app-link">Dashboard</Link>
+        <Link to="/user-management" className="app-link">User Management</Link>
+        <Link to="/workout-tracker" className="app-link">Workout Tracker</Link>
+        <Link to="/nutrition-tracker" className="app-link">Nutrition Tracker</Link>
+        <Link to="/weight-tracker" className="app-link">Weight Tracker</Link>
+        <Link to="/calorie-recommendations" className="app-link">Calorie Recommendations</Link>
+        <Link to="/training-programs" className="app-link">Training Programs</Link>
       </nav>
       <div className="container">
         <Routes>
