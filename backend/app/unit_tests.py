@@ -43,8 +43,6 @@ def test_add_nutrition_log():
     assert response.status_code == 200
     assert response.json()["message"] == "Nutrition log added successfully"
 
-
-
 def test_get_weight_logs():
     # Add weight log for testing
     weight_log = {"user_id": 1, "weight": 75.0, "date": "2024-12-29"}
@@ -53,10 +51,8 @@ def test_get_weight_logs():
     # Test retrieving weight logs
     response = client.get("/weight/1")
     assert response.status_code == 200
-    assert "logs" in response.json()  # Updated to match the response
+    assert "logs" in response.json()
     assert len(response.json()["logs"]) > 0
-
-
 
 def test_recommended_calories():
     params = {
@@ -85,13 +81,15 @@ def test_scrape_training_program_with_goal():
     assert "link" in first_program
     assert "description" in first_program
 
-def test_scrape_training_program_with_invalid_goal():
-    response = client.get("/scrape-training-program?goal=nonexistent")
+def test_training_program_list():
+    response = client.get("/training-programs")
     assert response.status_code == 200
     data = response.json()
-    assert "training_programs" in data
-    assert len(data["training_programs"]) == 1
+    assert "available_programs" in data
+    assert "muscle_building" in data["available_programs"]
 
-    first_program = data["training_programs"][0]
-    assert first_program["title"] == "Full Body Strength Training Program"
-    assert "https://www.muscleandstrength.com/workouts/full-body-strength-training" in first_program["link"]    
+def test_training_program_download():
+    response = client.get("/training-programs/muscle_building")
+    assert response.status_code == 200
+    assert response.headers["content-type"] == "application/pdf"
+    assert response.headers["content-disposition"] == "attachment; filename=muscle_building.pdf"

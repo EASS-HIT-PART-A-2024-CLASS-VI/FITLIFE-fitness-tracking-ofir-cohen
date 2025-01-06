@@ -12,6 +12,17 @@ def test_integration():
         response = requests.get("http://127.0.0.1:8000/")
         assert response.status_code == 200
         print("Root endpoint is working!")
+
+        # Test the list of training programs
+        response = requests.get("http://127.0.0.1:8000/training-programs")
+        assert response.status_code == 200
+        assert "available_programs" in response.json()
+
+        # Test downloading a specific training program
+        response = requests.get("http://127.0.0.1:8000/training-programs/muscle_building")
+        assert response.status_code == 200
+        assert response.headers["content-type"] == "application/pdf"
+
     finally:
         # Clean up
         subprocess.run(["docker-compose", "down"])
