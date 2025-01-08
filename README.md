@@ -18,7 +18,7 @@ To ensure scalability and maintainability, the backend is fully containerized wi
 - **Nutrition Logs**: Track daily calorie intake with nutrition logs.
 - **Weight Logs**: Record and monitor weight data over time for better progress tracking.
 - **Calorie Recommendation**: Calculate and recommend personalized daily calorie intake.
-- **Training Program Scraping**: Dynamically scrape training programs from reliable external sources based on user goals.
+- **Downloadable Training Programs**: Allow users to download specific training plans based on their fitness goals (e.g., muscle building, weight loss, general fitness, or home workouts).
 - **Interactive Frontend**: User-friendly React interface for visualizing data and interacting with the application.
 - **RESTful API**: Interactive API documentation with Swagger UI available at `/docs`.
 
@@ -72,9 +72,9 @@ ofircohen-fitness-tracker/
 - **`POST /weight`**: Log weight data for a user.  
 - **`GET /weight/{user_id}`**: Retrieve weight logs for a specific user.
 
-### **Utilities**
-- **`GET /recommended-calories`**: Calculate personalized daily calorie intake and set a target for users.  
-- **`GET /scrape-training-program`**: Dynamically scrape training programs based on user goals.
+### **Training Programs**
+- **`GET /training-programs`**: Get a list of available training programs.
+- **`GET /training-programs/{goal}`**: Download a specific training program based on the user's goal (e.g., muscle building, weight loss).
 
 ---
 
@@ -86,8 +86,6 @@ ofircohen-fitness-tracker/
 - **Pydantic**: For data validation and configuration management.
 - **SQLAlchemy**: ORM for managing database interactions.
 - **SQLite**: Lightweight database for persistent data storage.
-- **httpx**: For asynchronous HTTP requests.
-- **BeautifulSoup**: For web scraping.
 
 ### **Frontend**
 - **React**: A JavaScript library for building user interfaces.
@@ -103,12 +101,10 @@ ofircohen-fitness-tracker/
 
 ## **How to Run the Project**
 
-### **Backend Setup**
-
 1. **Clone the repository:**
    ```bash
    git clone https://github.com/your-repo-link.git
-   cd ofircohen-fitness-tracker/backend
+   cd ofircohen-fitness-tracker
    ```
 
 2. **Build and start the containers:**
@@ -121,23 +117,6 @@ ofircohen-fitness-tracker/
    - **Swagger UI:** [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
 
 ---
-
-### **Frontend Setup**
-
-1. **Navigate to the frontend folder:**
-   ```bash
-   cd ../frontend
-   ```
-
-2. **Install dependencies:**
-   ```bash
-   npm install
-   ```
-
-3. **Start the development server:**
-   ```bash
-   npm start
-   ```
 
 4. **Access the frontend:**
    - **Frontend URL:** [http://localhost:3000](http://localhost:3000)
@@ -169,10 +148,6 @@ ofircohen-fitness-tracker/
    - Implement secure user authentication with JWT.
 3. **Data Visualization**:
    - Expand charts and visualizations to include trends and insights.
-4. **Mobile App Development**:
-   - Create a cross-platform mobile app using Flutter or React Native.
-5. **Enhanced Scraping**:
-   - Add error handling for dynamic changes in website structures.
 
 ---
 

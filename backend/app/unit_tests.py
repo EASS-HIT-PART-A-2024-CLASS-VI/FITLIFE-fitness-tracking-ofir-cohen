@@ -68,18 +68,6 @@ def test_recommended_calories():
     assert "recommended_calories" in response.json()
     assert response.json()["target"] == "weight loss"
 
-def test_scrape_training_program_with_goal():
-    response = client.get("/scrape-training-program?goal=muscle")
-    assert response.status_code == 200
-    data = response.json()
-    assert "training_programs" in data
-    assert isinstance(data["training_programs"], list)
-    assert len(data["training_programs"]) > 0
-
-    first_program = data["training_programs"][0]
-    assert "title" in first_program
-    assert "link" in first_program
-    assert "description" in first_program
 
 def test_training_program_list():
     response = client.get("/training-programs")

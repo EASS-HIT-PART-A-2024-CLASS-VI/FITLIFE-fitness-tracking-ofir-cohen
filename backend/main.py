@@ -3,7 +3,6 @@ from pydantic import BaseModel, Field
 from typing import Optional, Dict, Any
 import yaml
 import httpx
-from bs4 import BeautifulSoup
 from sqlalchemy import create_engine, Column, Integer, String, Float
 from sqlalchemy.orm import declarative_base, sessionmaker, Session
 from fastapi.middleware.cors import CORSMiddleware
@@ -225,54 +224,6 @@ def recommended_calories(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
 
-# Scrape Training Programs
-@app.get("/scrape-training-program", summary="Get Training Program", tags=["Training"])
-async def scrape_training_program(goal: str = Query(None, description="User's goal (e.g., weight loss, muscle gain, general fitness)")):
-    try:
-        base_url = "https://www.muscleandstrength.com/workout-routines"
-        headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"}
-        async with httpx.AsyncClient() as client:
-            response = await client.get(base_url, headers=headers)
-            response.raise_for_status()
-            html_content = response.text
-
-        soup = BeautifulSoup(html_content, "html.parser")
-        programs = []
-
-        # Find all workout cards on the page
-        workout_cards = soup.find_all("div", class_="workout-card")
-        for card in workout_cards:
-            title_tag = card.find("h3")
-            link_tag = card.find("a", href=True)
-            description_tag = card.find("div", class_="workout-meta")
-
-            if title_tag and link_tag and description_tag:
-                title = title_tag.text.strip()
-                link = f"https://www.muscleandstrength.com{link_tag['href']}"
-                description = description_tag.text.strip()
-
-                if goal and goal.lower() in title.lower():
-                    programs.append({
-                        "title": title,
-                        "link": link,
-                        "description": description
-                    })
-
-        # If no matching programs are found, add a default program
-        if not programs:
-            default_program = {
-                "title": "Full Body Strength Training Program",
-                "link": "https://www.muscleandstrength.com/workouts/full-body-strength-training",
-                "description": "A great default program for overall fitness and strength."
-            }
-            programs.append(default_program)
-
-        return {"goal": goal, "training_programs": programs}
-
-    except httpx.RequestError as e:
-        raise HTTPException(status_code=500, detail=f"HTTP request failed: {e}")
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"An error occurred: {e}")
 
 # Define paths for PDFs
 PDF_PATHS = {
