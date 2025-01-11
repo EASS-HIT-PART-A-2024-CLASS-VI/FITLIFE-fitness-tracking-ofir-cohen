@@ -10,9 +10,13 @@
 }
 
 .dashboard-header .logo {
-    width: 150px; /* Adjusted logo size */
-    margin-bottom: 10px;
+    width: 250px; /* Adjust size */
+    height: auto; /* Maintain aspect ratio */
+    margin: 0 auto; /* Center the logo */
+    display: block;
+    margin-bottom: 20px; /* Add spacing below */
 }
+
 
 .dashboard-header h1 {
     font-size: 2.5em;

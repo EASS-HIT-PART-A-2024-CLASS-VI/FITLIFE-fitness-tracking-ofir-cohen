@@ -7,11 +7,12 @@ import NutritionTracker from './components/NutritionTracker';
 import WeightTracker from './components/WeightTracker';
 import CalorieRecommendations from './components/CalorieRecommendations';
 import TrainingPrograms from './components/TrainingPrograms';
-import './App.css'; // For any global styles
+import './App.css';
 
 const App = () => {
   return (
     <Router>
+      {/* Navigation Bar */}
       <nav className="app-nav">
         <Link to="/" className="app-link">Dashboard</Link>
         <Link to="/user-management" className="app-link">User Management</Link>
@@ -21,6 +22,8 @@ const App = () => {
         <Link to="/calorie-recommendations" className="app-link">Calorie Recommendations</Link>
         <Link to="/training-programs" className="app-link">Training Programs</Link>
       </nav>
+
+      {/* Main Content */}
       <div className="container">
         <Routes>
           <Route path="/" element={<Dashboard />} />
