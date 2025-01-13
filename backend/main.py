@@ -228,7 +228,7 @@ def recommended_calories(
 # Define paths for PDFs
 PDF_PATHS = {
     "muscle_building": "files/muscle_building.pdf",
-    "weight_loss": "files/fat_loss.pdf",
+    "fat_loss": "files/fat_loss.pdf",
     "general_fitness": "files/general_fitness.pdf",
     "home_workout": "files/home_workout.pdf"
 }
