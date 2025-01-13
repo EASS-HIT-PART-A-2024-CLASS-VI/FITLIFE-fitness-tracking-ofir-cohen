@@ -81,7 +81,7 @@ ofircohen-fitness-tracker/
 ## **Technologies Used**
 
 ### **Backend**
-- **Python 3.9+**: Core backend development language.
+- **Python 3.12-slim**: Core backend development language.
 - **FastAPI**: A modern web framework for building APIs quickly and efficiently.
 - **Pydantic**: For data validation and configuration management.
 - **SQLAlchemy**: ORM for managing database interactions.
