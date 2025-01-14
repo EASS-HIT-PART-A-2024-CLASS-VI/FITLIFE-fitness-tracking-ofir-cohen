@@ -1,6 +1,5 @@
 # **FitLife - Fitness Tracking App by Ofir Cohen**
-
-![FitLife Logo](src/assets/logo.png)
+<img src="https://github.com/user-attachments/assets/a1b01939-021f-4df6-851a-221fb8026d9c" alt="logo" style="width: 150px;">
 
 A professional fitness and nutrition tracking system designed to help users monitor their progress, achieve their fitness goals, and maintain a healthy lifestyle. Featuring calorie tracking, personalized training recommendations, and persistent data storage.
 
@@ -42,7 +41,6 @@ ofircohen-fitness-tracker/
 ├── frontend/
 │   ├── public/
 │   │   ├── index.html                   # HTML entry point
-│   │   ├── logo.png                     # Application logo
 │   ├── src/
 │   │   ├── components/                  # React components
 │   │   ├── App.js                       # Main application logic
