@@ -1,5 +1,6 @@
 # **FitLife - Fitness Tracking App by Ofir Cohen**
 
+![FitLife Logo](public/logo.png) 
 A professional fitness and nutrition tracking system designed to help users monitor their progress, achieve their fitness goals, and maintain a healthy lifestyle. Featuring calorie tracking, personalized training recommendations, and persistent data storage.
 
 ---
@@ -21,7 +22,6 @@ To ensure scalability and maintainability, the backend is fully containerized wi
 - **Downloadable Training Programs**: Allow users to download specific training plans based on their fitness goals (e.g., muscle building, weight loss, general fitness, or home workouts).
 - **Interactive Frontend**: User-friendly React interface for visualizing data and interacting with the application.
 - **RESTful API**: Interactive API documentation with Swagger UI available at `/docs`.
-
 ---
 
 ## **Project Structure**
@@ -116,8 +116,6 @@ ofircohen-fitness-tracker/
    - **API Base URL:** [http://127.0.0.1:8000](http://127.0.0.1:8000)
    - **Swagger UI:** [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
 
----
-
 4. **Access the frontend:**
    - **Frontend URL:** [http://localhost:3000](http://localhost:3000)
 
@@ -158,3 +156,4 @@ For questions, suggestions, or feedback, please reach out:
 - **Name**: Ofir Cohen  
 - **Email**: ofircohen599@gmail.com  
 - **GitHub**: [ofiz](https://github.com/ofiz)
+
