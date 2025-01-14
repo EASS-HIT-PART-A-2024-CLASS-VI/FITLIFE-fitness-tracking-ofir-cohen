@@ -1,6 +1,7 @@
 # **FitLife - Fitness Tracking App by Ofir Cohen**
 
-![FitLife Logo](public/logo.png) 
+![FitLife Logo](src/assets/logo.png)
+
 A professional fitness and nutrition tracking system designed to help users monitor their progress, achieve their fitness goals, and maintain a healthy lifestyle. Featuring calorie tracking, personalized training recommendations, and persistent data storage.
 
 ---
@@ -31,24 +32,29 @@ ofircohen-fitness-tracker/
 ├── backend/
 │   ├── Dockerfile                       # Docker configuration for the backend
 │   ├── config.yaml                      # Application configuration
-│   ├── docker-compose.yml               # Docker Compose for container orchestration
 │   ├── fitness_tracker.db               # SQLite database for persistent storage
 │   ├── main.py                          # FastAPI backend with endpoints
 │   ├── requirements.txt                 # Python dependencies
 │   ├── app/
 │   │   ├── unit_tests.py                # Pytest unit tests
 │   │   ├── integration_test.py          # Pytest integration tests
+│   │   ├── endpoints/                   # Folder for backend API endpoints
 ├── frontend/
 │   ├── public/
 │   │   ├── index.html                   # HTML entry point
+│   │   ├── logo.png                     # Application logo
 │   ├── src/
 │   │   ├── components/                  # React components
 │   │   ├── App.js                       # Main application logic
 │   │   ├── App.css                      # Application styles
 │   │   ├── index.js                     # React entry point
+│   ├── Dockerfile                       # Docker configuration for the frontend
+│   ├── .gitignore                       # Git ignore file
+│   ├── package.json                     # Node.js dependencies
+│   ├── package-lock.json                # Locked dependency versions
+├── docker-compose.yml                   # Docker Compose for container orchestration
 └── README.md                            # Project documentation
 ```
-
 ---
 
 ## **Endpoints**
