@@ -7,8 +7,13 @@ from sqlalchemy import create_engine, Column, Integer, String, Float
 from sqlalchemy.orm import declarative_base, sessionmaker, Session
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
-from fastapi.middleware.cors import CORSMiddleware
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+#from passlib.context import CryptContext
+import bcrypt
 import os
+import jwt
+from datetime import datetime, timedelta, timezone
+
 # Load configuration from YAML file
 try:
     with open("config.yaml", "r") as file:
@@ -37,16 +42,27 @@ app.add_middleware(
     allow_headers=["*"]
 )
 
+
 # SQLite Database setup
 DATABASE_URL = "sqlite:///./fitness_tracker.db"
 engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
+# JWT and Password Hashing
+SECRET_KEY = "your_secret_key"
+ALGORITHM = "HS256"
+ACCESS_TOKEN_EXPIRE_MINUTES = 30
+
+#pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login")
+
 # Database Models
 class UserDB(Base):
     __tablename__ = "users"
     id = Column(Integer, primary_key=True, index=True)
+    username = Column(String, unique=True, nullable=False)
+    password = Column(String, nullable=False)
     name = Column(String, nullable=False)
     age = Column(Integer, nullable=False)
     gender = Column(String, nullable=True)
@@ -74,6 +90,8 @@ class WeightLogDB(Base):
     weight = Column(Float, nullable=False)
     date = Column(String, nullable=False)
 
+    
+
 # Create tables
 Base.metadata.create_all(bind=engine)
 
@@ -85,13 +103,54 @@ def get_db():
     finally:
         db.close()
 
+# Utility functions
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+    # Verify password using bcrypt
+    return bcrypt.checkpw(plain_password.encode("utf-8"), hashed_password.encode("utf-8"))
+
+def get_password_hash(password: str) -> str:
+    # Hash password using bcrypt
+    return bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
+
+
+def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
+    to_encode = data.copy()
+    expire = datetime.now(timezone.utc) + (expires_delta or timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
+    to_encode.update({"exp": expire})
+    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    return encoded_jwt
+
+def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        username = payload.get("sub")
+        if username is None:
+            raise HTTPException(status_code=401, detail="Invalid token")
+        user = db.query(UserDB).filter(UserDB.username == username).first()
+        if user is None:
+            raise HTTPException(status_code=401, detail="User not found")
+        return user
+    except jwt.ExpiredSignatureError:
+        raise HTTPException(status_code=401, detail="Token expired")
+    except jwt.PyJWTError:
+        raise HTTPException(status_code=401, detail="Invalid token")
+
 # Models for data validation
 class User(BaseModel):
+    username: str
+    password: str
     name: str
     age: int
     gender: Optional[str] = Field(None, description="Gender of the user")
     height: Optional[float] = Field(None, description="Height in cm")
     weight: Optional[float] = Field(None, description="Weight in kg")
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+class TokenData(BaseModel):
+    username: Optional[str] = None
 
 class Workout(BaseModel):
     user_id: int
@@ -108,25 +167,65 @@ class WeightLog(BaseModel):
     weight: float
     date: str
 
+
 # General Endpoints
 @app.get("/", summary="Root Endpoint", tags=["General"])
 def read_root():
     return {"message": config.get("welcome_message", "Welcome to the Fitness and Nutrition Tracking API")}
 
-# User Management
-@app.post("/users", summary="Create User", tags=["Users"])
-def create_user(user: User, db: Session = Depends(get_db)):
+
+# Authentication Endpoints
+@app.post("/register", summary="Register User", tags=["Authentication"])
+def register_user(user: User, db: Session = Depends(get_db)):
+    if db.query(UserDB).filter(UserDB.username == user.username).first():
+        raise HTTPException(status_code=400, detail="Username already taken")
+    hashed_password = get_password_hash(user.password)
     db_user = UserDB(
+        username=user.username,
+        password=hashed_password,
         name=user.name,
         age=user.age,
         gender=user.gender,
         height=user.height,
-        weight=user.weight
+        weight=user.weight,
     )
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
-    return {"message": "User created successfully", "user": db_user}
+    return {
+        "message": "User registered successfully",
+        "user": {
+            "id": db_user.id,
+            "username": db_user.username,
+            "name": db_user.name,
+            "age": db_user.age,
+            "gender": db_user.gender,
+            "height": db_user.height,
+            "weight": db_user.weight,
+        },
+    }
+
+
+@app.post("/login", response_model=Token, summary="User Login", tags=["Authentication"])
+def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+    user = db.query(UserDB).filter(UserDB.username == form_data.username).first()
+    if not user or not verify_password(form_data.password, user.password):
+        raise HTTPException(status_code=401, detail="Invalid username or password")
+    access_token = create_access_token(data={"sub": user.username})
+    return {"access_token": access_token, "token_type": "bearer"}
+
+
+@app.get("/me", summary="Get Current User", tags=["Authentication"])
+def read_users_me(current_user: UserDB = Depends(get_current_user)):
+    return {
+        "username": current_user.username,
+        "name": current_user.name,
+        "age": current_user.age,
+        "gender": current_user.gender,
+        "height": current_user.height,
+        "weight": current_user.weight
+    }
+
 
 @app.get("/users/{user_id}", summary="Get User", tags=["Users"])
 def get_user(user_id: int, db: Session = Depends(get_db)):
@@ -137,63 +236,104 @@ def get_user(user_id: int, db: Session = Depends(get_db)):
 
 # Workouts
 @app.post("/workouts", summary="Add Workout", tags=["Workouts"])
-def add_workout(workout: Workout, db: Session = Depends(get_db)):
+def add_workout(workout: Workout, db: Session = Depends(get_db)) -> dict:
     db_workout = WorkoutDB(
         user_id=workout.user_id,
         exercise=workout.exercise,
-        duration=workout.duration
+        duration=workout.duration,
     )
     db.add(db_workout)
     db.commit()
     db.refresh(db_workout)
-    return {"message": "Workout added successfully", "workout": db_workout}
+    return {
+        "message": "Workout added successfully",
+        "workout": {
+            "id": db_workout.id,
+            "user_id": db_workout.user_id,
+            "exercise": db_workout.exercise,
+            "duration": db_workout.duration,
+        },
+    }
 
 @app.get("/workouts/{user_id}", summary="Get Workouts", tags=["Workouts"])
-def get_workouts(user_id: int, db: Session = Depends(get_db)):
+def get_workouts(user_id: int, db: Session = Depends(get_db)) -> dict:
     workouts = db.query(WorkoutDB).filter(WorkoutDB.user_id == user_id).all()
     if not workouts:
         raise HTTPException(status_code=404, detail="No workouts found for this user")
-    return {"user_id": user_id, "workouts": workouts}
+    return {
+        "user_id": user_id,
+        "workouts": [
+            {"id": w.id, "exercise": w.exercise, "duration": w.duration} for w in workouts
+        ],
+    }
 
 # Nutrition Logs
 @app.post("/nutrition", summary="Add Nutrition Log", tags=["Nutrition"])
-def add_nutrition_log(log: NutritionLog, db: Session = Depends(get_db)):
+def add_nutrition_log(log: NutritionLog, db: Session = Depends(get_db)) -> dict:
     db_log = NutritionLogDB(
         user_id=log.user_id,
         food=log.food,
-        calories=log.calories
+        calories=log.calories,
     )
     db.add(db_log)
     db.commit()
     db.refresh(db_log)
-    return {"message": "Nutrition log added successfully", "log": db_log}
+    return {
+        "message": "Nutrition log added successfully",
+        "log": {
+            "id": db_log.id,
+            "user_id": db_log.user_id,
+            "food": db_log.food,
+            "calories": db_log.calories,
+        },
+    }
 
 @app.get("/nutrition/{user_id}", summary="Get Nutrition Logs", tags=["Nutrition"])
-def get_nutrition_logs(user_id: int, db: Session = Depends(get_db)):
+def get_nutrition_logs(user_id: int, db: Session = Depends(get_db)) -> dict:
     logs = db.query(NutritionLogDB).filter(NutritionLogDB.user_id == user_id).all()
     if not logs:
         raise HTTPException(status_code=404, detail="No nutrition logs found for this user")
-    return {"user_id": user_id, "logs": logs}
+    return {
+        "user_id": user_id,
+        "logs": [
+            {"id": log.id, "food": log.food, "calories": log.calories} for log in logs
+        ],
+    }
+
 
 # Weight Logs
 @app.post("/weight", summary="Add Weight Log", tags=["Weight"])
-def add_weight_log(weight_log: WeightLog, db: Session = Depends(get_db)):
+def add_weight_log(weight_log: WeightLog, db: Session = Depends(get_db)) -> dict:
     db_log = WeightLogDB(
         user_id=weight_log.user_id,
         weight=weight_log.weight,
-        date=weight_log.date
+        date=weight_log.date,
     )
     db.add(db_log)
     db.commit()
     db.refresh(db_log)
-    return {"message": "Weight log added successfully", "log": db_log}
+    return {
+        "message": "Weight log added successfully",
+        "log": {
+            "id": db_log.id,
+            "user_id": db_log.user_id,
+            "weight": db_log.weight,
+            "date": db_log.date,
+        },
+    }
 
 @app.get("/weight/{user_id}", summary="Get Weight Logs", tags=["Weight"])
-def get_weight_logs(user_id: int, db: Session = Depends(get_db)):
+def get_weight_logs(user_id: int, db: Session = Depends(get_db)) -> dict:
     logs = db.query(WeightLogDB).filter(WeightLogDB.user_id == user_id).all()
     if not logs:
         raise HTTPException(status_code=404, detail="No weight logs found for this user")
-    return {"user_id": user_id, "logs": logs}
+    return {
+        "user_id": user_id,
+        "logs": [
+            {"id": log.id, "weight": log.weight, "date": log.date} for log in logs
+        ],
+    }
+
 
 # Utilities: Recommended Calories
 @app.get("/recommended-calories", summary="Get Recommended Calories", tags=["Utilities"])
