@@ -14,6 +14,7 @@ To ensure scalability and maintainability, the backend is fully containerized wi
 ---
 
 ## **Key Features**
+- **User Authentication**: Secure user authentication with JWT, allowing users to log in and access their personalized dashboard.
 - **Persistent User Management**: Create and manage user profiles with long-term data storage using SQLite.
 - **Workout Tracking**: Log and retrieve detailed workout records for users.
 - **Nutrition Logs**: Track daily calorie intake with nutrition logs.
@@ -60,8 +61,12 @@ ofircohen-fitness-tracker/
 ### **General**
 - **`GET /`**: Returns a welcome message.
 
+### **Authentication**
+- **`POST /register`**: Register a new user.
+- **`POST /login`**: Log in and retrieve a JWT.
+- **`GET /me`**: Retrieve the current user's details.
+
 ### **Users**
-- **`POST /users`**: Create a new user profile.
 - **`GET /users/{user_id}`**: Retrieve user details by ID.
 
 ### **Workouts**
@@ -90,6 +95,8 @@ ofircohen-fitness-tracker/
 - **Pydantic**: For data validation and configuration management.
 - **SQLAlchemy**: ORM for managing database interactions.
 - **SQLite**: Lightweight database for persistent data storage.
+- **JWT**: Secure token-based user authentication.
+- **bcrypt**: For secure password hashing.
 
 ### **Frontend**
 - **React**: A JavaScript library for building user interfaces.
@@ -146,9 +153,7 @@ ofircohen-fitness-tracker/
 1. **Frontend Enhancements**:
    - Add more interactive components for an improved user experience.
    - Include dark mode toggle and accessibility features.
-2. **User Authentication**:
-   - Implement secure user authentication with JWT.
-3. **Data Visualization**:
+2. **Data Visualization**:
    - Expand charts and visualizations to include trends and insights.
 
 ---
@@ -160,4 +165,3 @@ For questions, suggestions, or feedback, please reach out:
 - **Name**: Ofir Cohen  
 - **Email**: ofircohen599@gmail.com  
 - **GitHub**: [ofiz](https://github.com/ofiz)
-
