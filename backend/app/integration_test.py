@@ -3,27 +3,52 @@ import time
 import requests
 
 def test_integration():
-    # Start the application using Docker Compose
-    subprocess.run(["docker-compose", "up", "-d"])
-    time.sleep(10)  # Increase wait time for containers to start
+    print("Starting Docker containers...")
+    subprocess.run(["docker-compose", "up", "-d"], check=True)
+    time.sleep(15)  # Wait for containers to fully start
 
     try:
-        # Test the root endpoint
-        response = requests.get("http://127.0.0.1:8000/")
+        base_url = "http://127.0.0.1:8000"
+
+        # Test root endpoint
+        response = requests.get(f"{base_url}/")
         assert response.status_code == 200
+        assert "message" in response.json()
         print("Root endpoint is working!")
 
-        # Test the list of training programs
-        response = requests.get("http://127.0.0.1:8000/training-programs")
+        # Test user registration
+        user_data = {
+            "username": "johndoe",
+            "password": "securepassword",
+            "name": "John Doe",
+            "age": 30,
+            "gender": "Male",
+            "height": 180.0,
+            "weight": 75.0
+        }
+        response = requests.post(f"{base_url}/register", json=user_data)
         assert response.status_code == 200
-        assert "available_programs" in response.json()
+        assert response.json()["message"] == "User registered successfully"
+        print("User registration is working!")
 
-        # Test downloading a specific training program
-        response = requests.get("http://127.0.0.1:8000/training-programs/muscle_building")
+        # Test user login
+        login_data = {
+            "username": "johndoe",
+            "password": "securepassword"
+        }
+        response = requests.post(f"{base_url}/login", data=login_data)
         assert response.status_code == 200
-        assert response.headers["content-type"] == "application/pdf"
+        access_token = response.json()["access_token"]
+        print("User login is working!")
+
+        # Test fetching user details
+        headers = {"Authorization": f"Bearer {access_token}"}
+        response = requests.get(f"{base_url}/me", headers=headers)
+        assert response.status_code == 200
+        assert response.json()["username"] == "johndoe"
+        print("User details endpoint is working!")
 
     finally:
-        # Clean up
-        subprocess.run(["docker-compose", "down"])
-        print("Integration test executed successfully.")
+        print("Stopping Docker containers...")
+        subprocess.run(["docker-compose", "down"], check=True)
+        print("Integration test completed.")
