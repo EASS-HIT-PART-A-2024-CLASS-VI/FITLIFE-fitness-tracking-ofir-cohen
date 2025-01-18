@@ -1,53 +1,19 @@
 .dashboard-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     text-align: center;
     padding: 20px;
-    background-color: #f9f9f9;
-    min-height: 100vh;
-}
-
-.dashboard-header {
-    margin-bottom: 20px;
-}
-
-.dashboard-header .logo {
-    width: 250px; /* Adjust size */
-    height: auto; /* Maintain aspect ratio */
-    margin: 0 auto; /* Center the logo */
-    display: block;
-    margin-bottom: 20px; /* Add spacing below */
-}
-
-
-.dashboard-header h1 {
+  }
+  
+  .dashboard-container h1 {
     font-size: 2.5em;
     color: #333;
-}
-
-.dashboard-header p {
+  }
+  
+  .dashboard-container p {
     font-size: 1.2em;
     color: #666;
-}
-
-.dashboard-nav {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 15px;
-}
-
-.dashboard-link {
-    display: inline-block;
-    padding: 10px 20px;
-    font-size: 1.1em;
-    color: #007bff;
-    border: 2px solid #007bff;
-    border-radius: 5px;
-    text-decoration: none;
-    background-color: #fff;
-    transition: all 0.3s ease;
-}
-
-.dashboard-link:hover {
-    background-color: #007bff;
-    color: #fff;
-}
+  }
+  
