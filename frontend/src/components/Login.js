@@ -37,7 +37,6 @@ const Login = ({ onLogin }) => {
     e.preventDefault();
     setError('');
 
-    // Determine endpoint and body format based on mode
     const endpoint = isRegistering ? 'http://127.0.0.1:8000/register' : 'http://127.0.0.1:8000/login';
     const bodyData = isRegistering
       ? JSON.stringify(formData)
@@ -53,18 +52,45 @@ const Login = ({ onLogin }) => {
       });
 
       if (!response.ok) {
-        throw new Error(isRegistering ? 'Registration failed. Try a different username.' : 'Invalid username or password');
+        throw new Error(isRegistering ? 'Registration failed' : 'Invalid username or password');
       }
 
-      if (isRegistering) {
-        alert('Registration successful! Please login.');
-        setIsRegistering(false);  // Switch to login mode after registration
-      } else {
-        const data = await response.json();
+      const data = await response.json();
+      console.log("Login Response:", data); // ✅ Debugging login response
+
+      if (!isRegistering) {
+        // ✅ Store token & user_id properly
         localStorage.setItem('token', data.access_token);
-        onLogin(); // Notify parent component of successful login
+        console.log("✅ Token stored:", data.access_token);
+
+        // Fetch user details and store user_id
+        const userResponse = await fetch('http://127.0.0.1:8000/me', {
+          headers: {
+            'Authorization': `Bearer ${data.access_token}`
+          }
+        });
+
+        if (userResponse.ok) {
+          const userData = await userResponse.json();
+          console.log("Fetched User Data:", userData); // ✅ Debugging user response
+
+          if (userData && userData.id) {
+            localStorage.setItem('user_id', userData.id);
+            console.log("✅ User ID stored:", localStorage.getItem("user_id")); // Debugging
+          } else {
+            throw new Error("User ID is missing in the response.");
+          }
+
+          onLogin(); // Update app state
+        } else {
+          throw new Error("Failed to fetch user details.");
+        }
+      } else {
+        alert('Registration successful! Please login.');
+        setIsRegistering(false);
       }
     } catch (err) {
+      console.error("❌ Login/Register Error:", err.message);
       setError(err.message);
     }
   };

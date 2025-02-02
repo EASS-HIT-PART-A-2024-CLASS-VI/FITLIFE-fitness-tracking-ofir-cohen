@@ -8,11 +8,12 @@ from sqlalchemy.orm import declarative_base, sessionmaker, Session
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-#from passlib.context import CryptContext
 import bcrypt
 import os
 import jwt
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta, timezone, date
+from app.database import get_db  
+from app.models import UserDB, WorkoutDB, NutritionLogDB, WeightLogDB  
 
 # Load configuration from YAML file
 try:
@@ -162,10 +163,10 @@ class NutritionLog(BaseModel):
     food: str
     calories: int
 
-class WeightLog(BaseModel):
+class WeightLogRequest(BaseModel):
     user_id: int
     weight: float
-    date: str
+    date: date
 
 
 # General Endpoints
@@ -218,6 +219,7 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depend
 @app.get("/me", summary="Get Current User", tags=["Authentication"])
 def read_users_me(current_user: UserDB = Depends(get_current_user)):
     return {
+        "id": current_user.id, 
         "username": current_user.username,
         "name": current_user.name,
         "age": current_user.age,
@@ -225,6 +227,7 @@ def read_users_me(current_user: UserDB = Depends(get_current_user)):
         "height": current_user.height,
         "weight": current_user.weight
     }
+
 
 
 @app.get("/users/{user_id}", summary="Get User", tags=["Users"])
@@ -302,37 +305,27 @@ def get_nutrition_logs(user_id: int, db: Session = Depends(get_db)) -> dict:
 
 
 # Weight Logs
-@app.post("/weight", summary="Add Weight Log", tags=["Weight"])
-def add_weight_log(weight_log: WeightLog, db: Session = Depends(get_db)) -> dict:
-    db_log = WeightLogDB(
-        user_id=weight_log.user_id,
-        weight=weight_log.weight,
-        date=weight_log.date,
-    )
-    db.add(db_log)
+@app.post("/weight")
+def add_weight_log(weight_log: WeightLogRequest, db: Session = Depends(get_db)):
+    """ Adds a new weight entry to the database """
+    user = db.query(UserDB).filter(UserDB.id == weight_log.user_id).first()  
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    new_weight_log = WeightLogDB(user_id=weight_log.user_id, weight=weight_log.weight, date=weight_log.date)
+    db.add(new_weight_log)
     db.commit()
-    db.refresh(db_log)
-    return {
-        "message": "Weight log added successfully",
-        "log": {
-            "id": db_log.id,
-            "user_id": db_log.user_id,
-            "weight": db_log.weight,
-            "date": db_log.date,
-        },
-    }
+    db.refresh(new_weight_log)
+    return {"message": "Weight log added successfully"}
 
-@app.get("/weight/{user_id}", summary="Get Weight Logs", tags=["Weight"])
-def get_weight_logs(user_id: int, db: Session = Depends(get_db)) -> dict:
-    logs = db.query(WeightLogDB).filter(WeightLogDB.user_id == user_id).all()
+
+@app.get("/weight/{user_id}")
+def get_weight_logs(user_id: int, db: Session = Depends(get_db)):
+    """ Retrieves all weight logs for a user """
+    logs = db.query(WeightLogDB).filter(WeightLogDB.user_id == user_id).order_by(WeightLogDB.date).all()
     if not logs:
-        raise HTTPException(status_code=404, detail="No weight logs found for this user")
-    return {
-        "user_id": user_id,
-        "logs": [
-            {"id": log.id, "weight": log.weight, "date": log.date} for log in logs
-        ],
-    }
+        raise HTTPException(status_code=404, detail="No weight logs found")
+    return {"logs": logs}
 
 
 # Utilities: Recommended Calories
