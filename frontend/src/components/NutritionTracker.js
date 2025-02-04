@@ -1,65 +1,104 @@
-import React, { useState } from 'react';
-import CaloriePieChart from './CaloriePieChart';
+import React, { useState, useEffect } from 'react';
+import {
+  Chart as ChartJS,
+  ArcElement,
+  Tooltip,
+  Legend,
+} from 'chart.js';
+import { Pie } from 'react-chartjs-2';
 import './NutritionTracker.css';
 
-const NutritionTracker = () => {
-  const [foodLogs, setFoodLogs] = useState([]);
-  const [dailyGoal, setDailyGoal] = useState(2000); // Default daily goal
-  const [foodInput, setFoodInput] = useState({ food: '', calories: '', mealType: '' });
+ChartJS.register(ArcElement, Tooltip, Legend);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFoodInput({ ...foodInput, [name]: value });
-  };
+const NutritionTracker = () => {
+  const [foodLogs, setFoodLogs] = useState(() => {
+    return JSON.parse(localStorage.getItem('foodLogs')) || {}; // Load from localStorage
+  });
+  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
+  const [food, setFood] = useState('');
+  const [calories, setCalories] = useState('');
+  const [mealType, setMealType] = useState('');
+  const [calorieGoal, setCalorieGoal] = useState(() => {
+    return localStorage.getItem('calorieGoal') || 2000; // Load saved goal or default to 2000
+  });
+
+  useEffect(() => {
+    localStorage.setItem('foodLogs', JSON.stringify(foodLogs)); // Save food logs to localStorage
+  }, [foodLogs]);
+
+  useEffect(() => {
+    localStorage.setItem('calorieGoal', calorieGoal); // Save calorie goal
+  }, [calorieGoal]);
 
   const handleAddLog = () => {
-    if (foodInput.food && foodInput.calories > 0 && foodInput.mealType) {
-      setFoodLogs([...foodLogs, { ...foodInput, calories: parseInt(foodInput.calories, 10) }]);
-      setFoodInput({ food: '', calories: '', mealType: '' });
-    } else {
-      alert('Please fill out all fields with valid values.');
+    if (!food || !calories || !mealType) {
+      alert("Please enter all details.");
+      return;
     }
-  };
 
-  const handleDeleteLog = (index) => {
-    setFoodLogs(foodLogs.filter((_, i) => i !== index));
-  };
-
-  const handleGoalChange = (e) => {
-    const newGoal = parseInt(e.target.value, 10);
-    if (!isNaN(newGoal) && newGoal > 0) {
-      setDailyGoal(newGoal);
-    } else {
-      alert('Please enter a valid daily goal.');
+    const updatedLogs = { ...foodLogs };
+    if (!updatedLogs[selectedDate]) {
+      updatedLogs[selectedDate] = [];
     }
+
+    updatedLogs[selectedDate].push({
+      food,
+      calories: parseInt(calories, 10),
+      mealType,
+    });
+
+    setFoodLogs(updatedLogs);
+    setFood('');
+    setCalories('');
+    setMealType('');
   };
 
-  const totalCalories = foodLogs.reduce((sum, log) => sum + log.calories, 0);
+  const handleDateChange = (direction) => {
+    const currentDate = new Date(selectedDate);
+    currentDate.setDate(currentDate.getDate() + direction);
+
+    // Prevent navigating to future dates
+    const today = new Date().toISOString().split('T')[0];
+    if (currentDate.toISOString().split('T')[0] > today) {
+      return;
+    }
+
+    setSelectedDate(currentDate.toISOString().split('T')[0]);
+  };
+
+  const selectedLogs = foodLogs[selectedDate] || [];
+  const totalCalories = selectedLogs.reduce((sum, log) => sum + log.calories, 0);
+
+  const chartData = {
+    labels: selectedLogs.map(log => log.food.toUpperCase()),
+    datasets: [
+      {
+        label: 'Calories',
+        data: selectedLogs.map(log => log.calories),
+        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4CAF50', '#FF4500'],
+      },
+    ],
+  };
 
   return (
     <div className="nutrition-tracker">
       <h1>Nutrition Tracker</h1>
+
       <div className="form-group">
         <input
           type="text"
-          name="food"
           placeholder="Food"
-          value={foodInput.food}
-          onChange={handleInputChange}
+          value={food}
+          onChange={(e) => setFood(e.target.value)}
         />
         <input
           type="number"
-          name="calories"
           placeholder="Calories"
-          value={foodInput.calories}
-          onChange={handleInputChange}
+          value={calories}
+          onChange={(e) => setCalories(e.target.value)}
         />
-        <select
-          name="mealType"
-          value={foodInput.mealType}
-          onChange={handleInputChange}
-        >
-          <option value="" disabled>Select Meal Type</option>
+        <select value={mealType} onChange={(e) => setMealType(e.target.value)}>
+          <option value="">Select Meal Type</option>
           <option value="Breakfast">Breakfast</option>
           <option value="Lunch">Lunch</option>
           <option value="Dinner">Dinner</option>
@@ -67,23 +106,33 @@ const NutritionTracker = () => {
         </select>
         <button onClick={handleAddLog}>Add Log</button>
       </div>
-      <div className="goal-input">
-        <label htmlFor="daily-goal">Daily Calorie Goal: </label>
+
+      <div className="date-navigation">
+        <button onClick={() => handleDateChange(-1)}>← Previous Day</button>
+        <span>{selectedDate}</span>
+        <button onClick={() => handleDateChange(1)}>Next Day →</button>
+      </div>
+
+      <div className="daily-goal">
+        <strong>Daily Calorie Goal:</strong>
         <input
-          id="daily-goal"
           type="number"
-          value={dailyGoal}
-          onChange={handleGoalChange}
+          value={calorieGoal}
+          onChange={(e) => setCalorieGoal(e.target.value)}
         />
       </div>
+
       <div className="chart-container">
-        {foodLogs.length > 0 ? (
-          <CaloriePieChart foodLogs={foodLogs} dailyGoal={dailyGoal} />
+        {selectedLogs.length > 0 ? (
+          <Pie data={chartData} options={{ maintainAspectRatio: false }} />
         ) : (
-          <p>No food logs available. Start adding your meals to track calories.</p>
+          <p>No food logs for this day.</p>
         )}
       </div>
-      <p>Total Calories: {totalCalories} / {dailyGoal}</p>
+
+      <div className="calorie-summary">
+        Total Calories: {totalCalories} / {calorieGoal}
+      </div>
     </div>
   );
 };

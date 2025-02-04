@@ -24,13 +24,8 @@ const WeightTracker = () => {
   // Ensure userId is valid before making API calls
   const parsedUserId = userId ? parseInt(userId, 10) : null;
 
-  /** ✅ Wrap fetchWeightLogs in useCallback to avoid unnecessary recreation */
   const fetchWeightLogs = useCallback(async () => {
-    if (!parsedUserId) {
-      console.error("No user ID available to fetch weight logs.");
-      return;
-    }
-
+    if (!parsedUserId) return;
     try {
       const response = await fetch(`http://127.0.0.1:8000/weight/${parsedUserId}`);
       if (!response.ok) throw new Error("Failed to fetch weight logs");
@@ -42,18 +37,19 @@ const WeightTracker = () => {
     }
   }, [parsedUserId]);
 
-  // ✅ Add dependencies to useEffect to remove warnings
   useEffect(() => {
-    if (parsedUserId) {
-      fetchWeightLogs();
-    } else {
-      console.error("No user ID found. User must log in.");
-    }
-  }, [fetchWeightLogs, parsedUserId]);
+    fetchWeightLogs();
+  }, [fetchWeightLogs]);
 
   const handleAddLog = async () => {
     if (!newWeight || !logDate) {
       alert("Please enter a valid weight and date.");
+      return;
+    }
+
+    const today = new Date().toISOString().split("T")[0];
+    if (logDate > today) {
+      alert("Future dates are not allowed!");
       return;
     }
 
@@ -62,23 +58,11 @@ const WeightTracker = () => {
       return;
     }
 
-    /** ✅ Check if the selected date is in the future */
-    const selectedDate = new Date(logDate);
-    const today = new Date();
-    today.setHours(0, 0, 0, 0); // Reset time to prevent time-based issues
-
-    if (selectedDate > today) {
-      alert("You cannot enter a weight for a future date.");
-      return;
-    }
-
     const weightData = { 
       user_id: parsedUserId, 
       weight: parseFloat(newWeight), 
       date: logDate 
     };
-
-    console.log("Adding Weight Log:", weightData);
 
     try {
       const response = await fetch("http://127.0.0.1:8000/weight", {
@@ -94,7 +78,7 @@ const WeightTracker = () => {
         throw new Error(errorData.detail || "Failed to add weight log");
       }
 
-      await fetchWeightLogs();  // Reload weight logs
+      await fetchWeightLogs();
       setNewWeight('');
       setLogDate('');
     } catch (error) {
@@ -150,7 +134,7 @@ const WeightTracker = () => {
           type="date"
           value={logDate}
           onChange={(e) => setLogDate(e.target.value)}
-          max={new Date().toISOString().split("T")[0]} /** ✅ Prevent future dates in the picker */
+          max={new Date().toISOString().split("T")[0]} // Prevents selecting future dates
         />
         <button onClick={handleAddLog}>Add Log</button>
       </div>
@@ -162,7 +146,7 @@ const WeightTracker = () => {
         <button onClick={() => setFilter('1y')}>Last year</button>
         <button onClick={() => setFilter('all')}>All time</button>
       </div>
-      <div className="chart-container">
+      <div className="chart-container weight-chart">
         {filteredLogs.length > 0 ? (
           <Line data={chartData} />
         ) : (

@@ -1,38 +1,38 @@
 .weight-tracker {
-    padding: 20px;
-  }
-  
-  .form-group {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
-  }
-  
-  input {
-    padding: 10px;
-    font-size: 16px;
-  }
-  
-  button {
-    padding: 10px 15px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    cursor: pointer;
-  }
-  
-  button:hover {
-    background-color: #45a049;
-  }
-  
-  .filter-buttons {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
-  }
-  
-  .chart-container {
-    max-width: 800px;
-    margin: 0 auto;
-  }
-  
+  text-align: center;
+  max-width: 900px;
+  margin: auto;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+input, select, button {
+  padding: 10px;
+  font-size: 16px;
+}
+
+.filter-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.chart-container.weight-chart {
+  width: 90%;  /* Restores the correct size */
+  max-width: 800px; /* Ensures the weight tracker graph remains large */
+  height: 400px;
+  margin: 20px auto;
+}
+
+/* Ensures calendar is in English */
+input[type="date"] {
+  font-family: Arial, sans-serif;
+  direction: ltr;
+  text-align: left;
+}
