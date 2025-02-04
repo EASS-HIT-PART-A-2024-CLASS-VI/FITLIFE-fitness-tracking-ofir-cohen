@@ -38,8 +38,8 @@ ofircohen-fitness-tracker/
 │   ├── app/ 
 │   │   ├── unit_tests.py                # Pytest unit tests
 │   │   ├── integration_test.py          # Pytest integration tests
-    │   ├── models.py                    # Database models
-    │   ├── database.py                  # SQLite connection       
+|   │   ├── models.py                    # Database models
+|   │   ├── database.py                  # SQLite connection       
 │   ├──.gitignore                        # Git ignore file
 
 ├── frontend/
