@@ -35,10 +35,13 @@ ofircohen-fitness-tracker/
 │   ├── fitness_tracker.db               # SQLite database for persistent storage
 │   ├── main.py                          # FastAPI backend with endpoints
 │   ├── requirements.txt                 # Python dependencies
-│   ├── app/
+│   ├── app/ 
 │   │   ├── unit_tests.py                # Pytest unit tests
 │   │   ├── integration_test.py          # Pytest integration tests
-│   │   ├── endpoints/                   # Folder for backend API endpoints
+    │   ├── models.py                    # Database models
+    │   ├── database.py                  # SQLite connection       
+│   ├──.gitignore                        # Git ignore file
+
 ├── frontend/
 │   ├── public/
 │   │   ├── index.html                   # HTML entry point
