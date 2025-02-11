@@ -1,65 +1,97 @@
 .calorie-recommendations {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #f7f7f7;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  }
-  
-  .calorie-recommendations h1 {
-    text-align: center;
-    color: #333;
-  }
-  
-  form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-  }
-  
-  .form-group {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  label {
-    font-weight: bold;
-    margin-bottom: 5px;
-  }
-  
-  input,
-  select {
-    padding: 10px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
-  
-  button {
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    font-size: 16px;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  button:hover {
-    background-color: #45a049;
-  }
-  
-  .result {
-    text-align: center;
-    margin-top: 20px;
-    font-size: 18px;
-    color: #333;
-  }
-  
-  .error {
-    color: red;
-    text-align: center;
-    margin-top: 20px;
-  }
-  
+  max-width: 500px;
+  margin: 20px auto;
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+/* Ensure this only affects the calorie content, not the navbar */
+.calorie-recommendations h1 {
+  font-size: 22px;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.calorie-recommendations .form-group {
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+.calorie-recommendations label {
+  display: block;
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.calorie-recommendations input,
+.calorie-recommendations select {
+  width: 100%;
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid #ced4da;
+  border-radius: 5px;
+}
+
+.calorie-recommendations button {
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.calorie-recommendations button:hover {
+  background-color: #218838;
+}
+
+.calorie-recommendations .result {
+  margin-top: 15px;
+  font-size: 18px;
+  font-weight: bold;
+  color: #007bff;
+}
+
+.calorie-recommendations .error {
+  margin-top: 10px;
+  font-size: 14px;
+  color: red;
+  font-weight: bold;
+}
+
+/* ✅ Fix navigation bar appearance */
+.app-nav {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background-color: #333;
+  padding: 10px;
+}
+
+.app-nav .app-link {
+  color: white;
+  text-decoration: none;
+  font-size: 16px;
+  margin: 0 10px;
+}
+
+.app-nav .logout-button {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.app-nav .logout-button:hover {
+  background-color: #218838;
+}

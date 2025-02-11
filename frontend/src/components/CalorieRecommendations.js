@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import "./CalorieRecommendations.css"; // Ensure you style the form appropriately
+import "./CalorieRecommendations.css"; 
 
 const CalorieRecommendations = () => {
   const [formData, setFormData] = useState({
@@ -25,7 +25,17 @@ const CalorieRecommendations = () => {
       const response = await axios.get("http://127.0.0.1:8000/recommended-calories", {
         params: formData,
       });
-      setRecommendedCalories(response.data.recommended_calories);
+
+      let adjustedCalories = response.data.recommended_calories;
+
+      // Adjust calorie intake based on goal
+      if (formData.target === "muscle gain") {
+        adjustedCalories += 150;  // Increase for muscle gain
+      } else if (formData.target === "weight loss") {
+        adjustedCalories -= 200;  // Decrease for weight loss
+      }
+
+      setRecommendedCalories(adjustedCalories);
       setError(null);
     } catch (err) {
       setError("Failed to fetch recommended calories. Please check your inputs.");
@@ -72,14 +82,11 @@ const CalorieRecommendations = () => {
 
         <div className="form-group">
           <label>Gender:</label>
-          <input
-            type="text"
-            name="gender"
-            value={formData.gender}
-            onChange={handleChange}
-            placeholder="male or female"
-            required
-          />
+          <select name="gender" value={formData.gender} onChange={handleChange} required>
+            <option value="">Select gender</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+          </select>
         </div>
 
         <div className="form-group">
@@ -98,7 +105,7 @@ const CalorieRecommendations = () => {
         </div>
 
         <div className="form-group">
-          <label>Target:</label>
+          <label>Fitness Goal:</label>
           <select
             name="target"
             value={formData.target}
@@ -106,9 +113,9 @@ const CalorieRecommendations = () => {
             required
           >
             <option value="">Select your goal</option>
-            <option value="weight loss">Weight Loss</option>
-            <option value="muscle gain">Muscle Gain</option>
             <option value="maintenance">Maintenance</option>
+            <option value="muscle gain">Muscle Gain</option>
+            <option value="weight loss">Weight Loss</option>
           </select>
         </div>
 

@@ -370,18 +370,31 @@ def recommended_calories(
             raise HTTPException(status_code=400, detail="Invalid activity level.")
         if gender.lower() not in ["male", "female"]:
             raise HTTPException(status_code=400, detail="Invalid gender.")
+        
+        # Calculate BMR (Basal Metabolic Rate)
         bmr = (
             (10 * weight + 6.25 * height - 5 * age + 5)
             if gender.lower() == "male"
             else (10 * weight + 6.25 * height - 5 * age - 161)
         )
         total_calories = bmr * activity_level_mapping[activity_level.lower()]
+        
+        # Adjust calorie intake based on the target fitness goal
+        if target:
+            target = target.lower()
+            if target == "muscle gain":
+                total_calories += 150  # Increase for muscle gain
+            elif target == "weight loss":
+                total_calories -= 200  # Decrease for weight loss
+            # Maintenance stays the same
+
         return {
             "recommended_calories": round(total_calories, 2),
             "target": target if target else "No specific target provided"
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
+
 
 
 # Define paths for PDFs
