@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, Link, useLocation, useNavigate } from 'react-router-dom';
 import Dashboard from './components/Dashboard';
 import WorkoutTracker from './components/WorkoutTracker';
 import NutritionTracker from './components/NutritionTracker';
@@ -11,38 +11,47 @@ import Register from './components/Register';
 import './App.css';
 
 /**
- * Main Application Component
- * Handles routing, authentication, and navigation across the application.
+ * Handles navigation and login state
  */
-const App = () => {
+const MainApp = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   /**
-   * Check if a user is logged in by verifying the presence of a token in localStorage.
+   * Check login status on app load
    */
   useEffect(() => {
     const token = localStorage.getItem('token');
-    if (token) {
-      setIsLoggedIn(true);
-    }
+    setIsLoggedIn(!!token);
   }, []);
 
   /**
-   * Handles user logout by clearing the token from localStorage.
+   * Maintain last visited page
+   */
+  useEffect(() => {
+    if (isLoggedIn) {
+      localStorage.setItem('lastVisitedPage', location.pathname);
+    }
+  }, [location.pathname, isLoggedIn]);
+
+  /**
+   * Handles user logout
    */
   const handleLogout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('lastVisitedPage');
     setIsLoggedIn(false);
+    navigate('/login', { replace: true });
   };
 
   return (
-    <Router>
+    <>
       {!isLoggedIn ? (
-        // If the user is not logged in, show login and registration routes
         <Routes>
           <Route path="/login" element={<Login onLogin={() => setIsLoggedIn(true)} />} />
           <Route path="/register" element={<Register />} />
-          <Route path="*" element={<Navigate to="/login" />} />
+          <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
       ) : (
         <>
@@ -57,7 +66,7 @@ const App = () => {
             <button onClick={handleLogout} className="logout-button">Logout</button>
           </nav>
 
-          {/* Main Content */}
+          {/* Smoothly Rendering Routes */}
           <div className="container">
             <Routes>
               <Route path="/" element={<Dashboard />} />
@@ -66,15 +75,23 @@ const App = () => {
               <Route path="/weight-tracker" element={<WeightTracker />} />
               <Route path="/calorie-recommendations" element={<CalorieRecommendations />} />
               <Route path="/training-programs" element={<TrainingPrograms />} />
-
-              {/* Redirect any unknown paths to the dashboard */}
-              <Route path="*" element={<Navigate to="/" />} />
+              {/* Redirect unknown paths to last visited page or dashboard */}
+              <Route path="*" element={<Navigate to={localStorage.getItem('lastVisitedPage') || "/"} replace />} />
             </Routes>
           </div>
         </>
       )}
-    </Router>
+    </>
   );
 };
+
+/**
+ * App Wrapper with Router to Ensure Navigation Works
+ */
+const App = () => (
+  <Router>
+    <MainApp />
+  </Router>
+);
 
 export default App;
