@@ -104,9 +104,16 @@ def test_add_workout():
         "weight": 75.0
     }
     client.post("/register", json=user_data)
-    workout_data = {"user_id": 1, "exercise": "Running", "duration": 30}
+
+    workout_data = {
+        "user_id": 1,
+        "exercise": "Running",
+        "duration": 30,
+        "date": "2025-02-11"  # ✅ Added missing date
+    }
+
     response = client.post("/workouts", json=workout_data)
-    assert response.status_code == 200
+    assert response.status_code == 200, f"Failed with response: {response.json()}"
     assert response.json()["message"] == "Workout added successfully"
 
 def test_get_workouts():
@@ -121,11 +128,20 @@ def test_get_workouts():
         "weight": 75.0
     }
     client.post("/register", json=user_data)
-    workout_data = {"user_id": 1, "exercise": "Running", "duration": 30}
+
+    workout_data = {
+        "user_id": 1,
+        "exercise": "Running",
+        "duration": 30,
+        "date": "2025-02-11"  # ✅ Ensure date is included
+    }
+
     client.post("/workouts", json=workout_data)
-    response = client.get("/workouts/1")
-    assert response.status_code == 200
+
+    response = client.get(f"/workouts/1?date=2025-02-11")  # ✅ Added `date` query parameter
+    assert response.status_code == 200, f"Failed with response: {response.json()}"
     assert "workouts" in response.json()
+
 
 # Test Nutrition Logs
 def test_add_nutrition_log():

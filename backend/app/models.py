@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Float
+from sqlalchemy import Column, Integer, String, Float, Date, ForeignKey
 from sqlalchemy.orm import declarative_base
 
 Base = declarative_base()
@@ -17,21 +17,22 @@ class UserDB(Base):
 class WorkoutDB(Base):
     __tablename__ = "workouts"
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)  # ✅ Ensures workouts are linked to users
     exercise = Column(String, nullable=False)
     duration = Column(Integer, nullable=False)
+    date = Column(String, nullable=False) 
 
 class NutritionLogDB(Base):
     __tablename__ = "nutrition_logs"
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)  # ✅ Ensures nutrition logs are linked to users
     food = Column(String, nullable=False)
     calories = Column(Integer, nullable=False)
+    date = Column(String, nullable=False)  # ✅ Added date for nutrition logs
 
 class WeightLogDB(Base):
     __tablename__ = "weight_logs"
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
     weight = Column(Float, nullable=False)
     date = Column(String, nullable=False)
-

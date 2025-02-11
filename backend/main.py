@@ -76,7 +76,8 @@ class WorkoutDB(Base):
     user_id = Column(Integer, nullable=False)
     exercise = Column(String, nullable=False)
     duration = Column(Integer, nullable=False)
-
+    date = Column(String, nullable=False) 
+    
 class NutritionLogDB(Base):
     __tablename__ = "nutrition_logs"
     id = Column(Integer, primary_key=True, index=True)
@@ -157,6 +158,7 @@ class Workout(BaseModel):
     user_id: int
     exercise: str
     duration: int
+    date: date  
 
 class NutritionLog(BaseModel):
     user_id: int
@@ -239,36 +241,60 @@ def get_user(user_id: int, db: Session = Depends(get_db)):
 
 # Workouts
 @app.post("/workouts", summary="Add Workout", tags=["Workouts"])
-def add_workout(workout: Workout, db: Session = Depends(get_db)) -> dict:
-    db_workout = WorkoutDB(
-        user_id=workout.user_id,
-        exercise=workout.exercise,
-        duration=workout.duration,
-    )
-    db.add(db_workout)
-    db.commit()
-    db.refresh(db_workout)
-    return {
-        "message": "Workout added successfully",
-        "workout": {
-            "id": db_workout.id,
-            "user_id": db_workout.user_id,
-            "exercise": db_workout.exercise,
-            "duration": db_workout.duration,
-        },
-    }
+def add_workout(workout: Workout, db: Session = Depends(get_db)): 
+    """ Save workout to database """
+    try:
+        if not workout.date:
+            raise HTTPException(status_code=400, detail="Date is required")
+
+        db_workout = WorkoutDB(
+            user_id=workout.user_id,
+            exercise=workout.exercise,
+            duration=workout.duration,
+            date=workout.date  # ✅ Ensure we save the workout with the correct date
+        )
+        db.add(db_workout)
+        db.commit()
+        db.refresh(db_workout)
+
+        return {
+            "message": "Workout added successfully",
+            "workout": {
+                "id": db_workout.id,
+                "user_id": db_workout.user_id,
+                "exercise": db_workout.exercise,
+                "duration": db_workout.duration,
+                "date": db_workout.date
+            }
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Server error: {str(e)}")
+
 
 @app.get("/workouts/{user_id}", summary="Get Workouts", tags=["Workouts"])
-def get_workouts(user_id: int, db: Session = Depends(get_db)) -> dict:
-    workouts = db.query(WorkoutDB).filter(WorkoutDB.user_id == user_id).all()
-    if not workouts:
-        raise HTTPException(status_code=404, detail="No workouts found for this user")
-    return {
-        "user_id": user_id,
-        "workouts": [
-            {"id": w.id, "exercise": w.exercise, "duration": w.duration} for w in workouts
-        ],
-    }
+def get_workouts(user_id: int, date: str = Query(..., description="Date in YYYY-MM-DD format"), db: Session = Depends(get_db)):
+    """ Get workouts for a specific user and date """
+    try:
+        if not date:
+            raise HTTPException(status_code=400, detail="Date is required")
+
+        workouts = db.query(WorkoutDB).filter(
+            WorkoutDB.user_id == user_id,
+            WorkoutDB.date == date
+        ).all()
+
+        if workouts is None:
+            return {"workouts": []}  # ✅ Always return an array
+
+        return {
+            "user_id": user_id,
+            "workouts": [
+                {"id": w.id, "exercise": w.exercise, "duration": w.duration, "date": w.date} for w in workouts
+            ],
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Server error: {str(e)}")
+
 
 # Nutrition Logs
 @app.post("/nutrition", summary="Add Nutrition Log", tags=["Nutrition"])
