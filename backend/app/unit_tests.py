@@ -3,6 +3,9 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from main import app, Base, get_db
 import time
+import os
+import requests
+import pytest
 
 # Setting up a test database
 DATABASE_URL = "sqlite:///./test_fitness_tracker.db"
@@ -25,6 +28,51 @@ client = TestClient(app)
 def clear_test_database():
     Base.metadata.drop_all(bind=engine)
     Base.metadata.create_all(bind=engine)
+
+# ✅ **Ensure Chatbot is Running Before Running Tests**
+CHATBOT_URL = "http://localhost:8001/api/llm_chatbot/"
+
+@pytest.fixture(scope="session", autouse=True)
+def wait_for_chatbot():
+    """
+    Wait for the chatbot microservice to start before running tests.
+    """
+    retries = 10
+    while retries > 0:
+        try:
+            response = requests.get("http://localhost:8001/")
+            if response.status_code == 200:
+                print("✅ Chatbot microservice is ready!")
+                return
+        except requests.exceptions.ConnectionError:
+            pass
+        time.sleep(1)
+        retries -= 1
+    pytest.exit("❌ Chatbot microservice did not start in time.")
+
+# ✅ **Test Chatbot API - Valid Query**
+def test_llm_chatbot_valid_query():
+    """
+    Test valid chatbot response.
+    """
+    try:
+        response = requests.post(CHATBOT_URL, json={"question": "What are some good protein sources?"})
+        assert response.status_code == 200, f"Failed with response: {response.json()}"
+        assert "protein" in response.json()["response"].lower()
+    except requests.exceptions.ConnectionError as e:
+        pytest.fail(f"Chatbot microservice is not running. Error: {e}")
+
+# ✅ **Test Chatbot API - Empty Query**
+def test_llm_chatbot_empty_query():
+    """
+    Test chatbot response for an empty query.
+    """
+    try:
+        response = requests.post(CHATBOT_URL, json={"question": ""})
+        assert response.status_code == 400, f"Expected 400, got {response.status_code}"
+    except requests.exceptions.ConnectionError as e:
+        pytest.fail(f"Chatbot microservice is not running. Error: {e}")
+
 
 
 # Test Root Endpoint
@@ -245,3 +293,4 @@ def test_training_program_download():
     assert response.status_code == 200
     assert response.headers["content-type"] == "application/pdf"
     assert response.headers["content-disposition"] == "attachment; filename=muscle_building.pdf"
+

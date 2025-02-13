@@ -14,6 +14,16 @@ services:
     depends_on:
       - db
 
+  llm_chatbot_microservice:
+    build:
+      context: ./backend/LLM_CHATBOT
+    ports:
+      - "8001:8001"
+    environment:
+      - MISTRAL_API_KEY=${MISTRAL_API_KEY}
+    volumes:
+      - ./backend/LLM_CHATBOT:/app
+
   db:
     image: mariadb:10.5
     environment:

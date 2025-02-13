@@ -9,3 +9,5 @@ sqlalchemy
 bcrypt
 PyJWT==2.8.0
 python-multipart
+mistralai
+python-dotenv

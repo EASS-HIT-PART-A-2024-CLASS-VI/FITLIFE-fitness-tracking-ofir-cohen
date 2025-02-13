@@ -13,7 +13,9 @@ import os
 import jwt
 from datetime import datetime, timedelta, timezone, date
 from app.database import get_db  
-from app.models import UserDB, WorkoutDB, NutritionLogDB, WeightLogDB  
+from app.models import UserDB, WorkoutDB, NutritionLogDB, WeightLogDB 
+#from app.LLM_CHATBOT.llm_chatbot_service import router as llm_chatbot_router
+
 
 # Load configuration from YAML file
 try:
@@ -28,6 +30,12 @@ app = FastAPI(
     description="A FastAPI backend application for tracking users, workouts, nutrition logs, weight logs, goals, and training programs.",
     version="1.0.0"
 )
+
+app = FastAPI()
+
+# ✅ Register the LLM_CHATBOT API
+#app.include_router(llm_chatbot_router, prefix="/api", tags=["LLM_CHATBOT"])
+
 
 # CORS middleware setup
 origins = [
