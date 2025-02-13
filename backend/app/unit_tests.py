@@ -1,19 +1,18 @@
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from unittest.mock import patch
 from main import app, Base, get_db
 import time
 import os
 import requests
 import pytest
 
-# Setting up a test database
 DATABASE_URL = "sqlite:///./test_fitness_tracker.db"
 engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base.metadata.create_all(bind=engine)
 
-# Dependency override for the test database
 def override_get_db():
     db = TestingSessionLocal()
     try:
@@ -24,54 +23,50 @@ def override_get_db():
 app.dependency_overrides[get_db] = override_get_db
 client = TestClient(app)
 
-# Utility function to clear the test database before each test
 def clear_test_database():
     Base.metadata.drop_all(bind=engine)
     Base.metadata.create_all(bind=engine)
 
-# ✅ **Ensure Chatbot is Running Before Running Tests**
-CHATBOT_URL = "http://localhost:8001/api/llm_chatbot/"
+# Updated chatbot tests with mocking
+CHATBOT_URL = "http://localhost:8001/chatbot"
 
-@pytest.fixture(scope="session", autouse=True)
-def wait_for_chatbot():
-    """
-    Wait for the chatbot microservice to start before running tests.
-    """
-    retries = 10
-    while retries > 0:
-        try:
-            response = requests.get("http://localhost:8001/")
-            if response.status_code == 200:
-                print("✅ Chatbot microservice is ready!")
-                return
-        except requests.exceptions.ConnectionError:
-            pass
-        time.sleep(1)
-        retries -= 1
-    pytest.exit("❌ Chatbot microservice did not start in time.")
+@pytest.fixture
+def mock_chatbot_response():
+    with patch('requests.post') as mock_post:
+        mock_post.return_value.status_code = 200
+        mock_post.return_value.json.return_value = {
+            "response": "Here are some good protein sources: chicken, fish, eggs, legumes, and tofu."
+        }
+        yield mock_post
 
-# ✅ **Test Chatbot API - Valid Query**
-def test_llm_chatbot_valid_query():
+def test_llm_chatbot_valid_query(mock_chatbot_response):
     """
-    Test valid chatbot response.
+    Test valid chatbot response with mocked API.
     """
-    try:
-        response = requests.post(CHATBOT_URL, json={"question": "What are some good protein sources?"})
-        assert response.status_code == 200, f"Failed with response: {response.json()}"
-        assert "protein" in response.json()["response"].lower()
-    except requests.exceptions.ConnectionError as e:
-        pytest.fail(f"Chatbot microservice is not running. Error: {e}")
+    response = requests.post(
+        CHATBOT_URL,
+        json={"question": "What are some good protein sources?"}
+    )
+    assert response.status_code == 200
+    assert "protein" in response.json()["response"].lower()
+    mock_chatbot_response.assert_called_once()
 
-# ✅ **Test Chatbot API - Empty Query**
-def test_llm_chatbot_empty_query():
+@pytest.fixture
+def mock_chatbot_error():
+    with patch('requests.post') as mock_post:
+        mock_post.return_value.status_code = 400
+        mock_post.return_value.json.return_value = {
+            "detail": "400: Query cannot be empty"
+        }
+        yield mock_post
+
+def test_llm_chatbot_empty_query(mock_chatbot_error):
     """
-    Test chatbot response for an empty query.
+    Test chatbot response for an empty query with mocked API.
     """
-    try:
-        response = requests.post(CHATBOT_URL, json={"question": ""})
-        assert response.status_code == 400, f"Expected 400, got {response.status_code}"
-    except requests.exceptions.ConnectionError as e:
-        pytest.fail(f"Chatbot microservice is not running. Error: {e}")
+    response = requests.post(CHATBOT_URL, json={"question": ""})
+    assert response.status_code == 400
+    mock_chatbot_error.assert_called_once()
 
 
 

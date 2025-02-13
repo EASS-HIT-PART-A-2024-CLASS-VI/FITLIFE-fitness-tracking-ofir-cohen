@@ -3,9 +3,14 @@ from llm_chatbot_service import router as chatbot_router
 
 app = FastAPI(title="LLM Chatbot Microservice", description="Handles AI-powered fitness chatbot.")
 
-# Register the chatbot service
+# Register the chatbot service with the correct prefix
 app.include_router(chatbot_router, prefix="/chatbot", tags=["Chatbot"])
 
 @app.get("/")
 async def root():
     return {"message": "LLM Chatbot Microservice is running!"}
+
+# Add a health check endpoint
+@app.get("/health")
+async def health_check():
+    return {"status": "healthy"}
