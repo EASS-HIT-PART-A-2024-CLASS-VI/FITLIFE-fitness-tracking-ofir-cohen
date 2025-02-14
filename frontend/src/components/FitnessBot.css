@@ -1,0 +1,78 @@
+
+.fitness-bot-container {
+    display: flex;
+    flex-direction: column;
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 1rem;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    border-radius: 8px;
+  }
+  
+  .fitness-bot-container h2 {
+    text-align: center;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    color: #333;
+  }
+  
+  .messages {
+    flex: 1;
+    min-height: 300px;
+    max-height: 400px;
+    overflow-y: auto;
+    border: 1px solid #eee;
+    background-color: #fafafa;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    border-radius: 4px;
+  }
+  
+  .message {
+    margin: 0.5rem 0;
+    padding: 0.6rem;
+    border-radius: 4px;
+    max-width: 80%;
+    line-height: 1.4;
+  }
+  
+  .user-msg {
+    align-self: flex-end;
+    background-color: #c9ffc9; /* Light green for user messages */
+  }
+  
+  .bot-msg {
+    align-self: flex-start;
+    background-color: #f0f0f0; /* Light gray for bot messages */
+  }
+  
+  .input-area {
+    display: flex;
+    align-items: center;
+  }
+  
+  .input-area input {
+    flex: 1;
+    padding: 0.6rem;
+    font-size: 1rem;
+    margin-right: 0.5rem;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+  }
+  
+  .input-area button {
+    padding: 0.6rem 1rem;
+    font-size: 1rem;
+    cursor: pointer;
+    background-color: #4CAF50;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+  }
+  
+  .input-area button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  
