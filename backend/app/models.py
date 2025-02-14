@@ -17,7 +17,7 @@ class UserDB(Base):
 class WorkoutDB(Base):
     __tablename__ = "workouts"
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)  # ✅ Ensures workouts are linked to users
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)  #  Ensures workouts are linked to users
     exercise = Column(String, nullable=False)
     duration = Column(Integer, nullable=False)
     date = Column(String, nullable=False) 
@@ -25,10 +25,10 @@ class WorkoutDB(Base):
 class NutritionLogDB(Base):
     __tablename__ = "nutrition_logs"
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)  # ✅ Ensures nutrition logs are linked to users
+    user_id = Column(Integer, nullable=False)
     food = Column(String, nullable=False)
     calories = Column(Integer, nullable=False)
-    date = Column(String, nullable=False)  # ✅ Added date for nutrition logs
+    date = Column(String, nullable=False)  
 
 class WeightLogDB(Base):
     __tablename__ = "weight_logs"
