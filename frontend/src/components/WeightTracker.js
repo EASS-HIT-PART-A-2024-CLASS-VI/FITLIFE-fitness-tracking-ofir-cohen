@@ -11,6 +11,7 @@ import {
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 import './WeightTracker.css';
+import weightTrackerImage from '../assets/weight-tracker-image.jpg';
 
 ChartJS.register(LineElement, PointElement, CategoryScale, LinearScale, Title, Tooltip, Legend);
 
@@ -122,7 +123,14 @@ const WeightTracker = () => {
 
   return (
     <div className="weight-tracker">
-      <h1>Weight Tracker</h1>
+      <div className="weight-header">
+        <h1>Weight Tracker</h1>
+        <img 
+          src={weightTrackerImage} 
+          alt="Weight Tracker" 
+          className="weight-header-image" 
+        />
+      </div>
       <div className="form-group">
         <input
           type="number"
