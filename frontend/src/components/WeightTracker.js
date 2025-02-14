@@ -136,7 +136,7 @@ const WeightTracker = () => {
           onChange={(e) => setLogDate(e.target.value)}
           max={new Date().toISOString().split("T")[0]} // Prevents selecting future dates
         />
-        <button onClick={handleAddLog}>Add Log</button>
+        <button onClick={handleAddLog}>Add weight Log</button>
       </div>
       <div className="filter-buttons">
         <button onClick={() => setFilter('7d')}>Last 7 days</button>

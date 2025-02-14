@@ -7,6 +7,8 @@ import {
 } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
 import './NutritionTracker.css';
+import nutritionImage1 from '../assets/nutrition-image-1.jpg';
+import nutritionImage2 from '../assets/nutrition-image-2.jpg';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -82,7 +84,23 @@ const NutritionTracker = () => {
 
   return (
     <div className="nutrition-tracker">
-      <h1>Nutrition Tracker</h1>
+      <div className="nutrition-header">
+        <div className="nutrition-header-images">
+          <img 
+            src={nutritionImage1} 
+            alt="Nutrition Food 1" 
+            className="nutrition-header-image" 
+          />
+        </div>
+        <h1>Nutrition Tracker</h1>
+        <div className="nutrition-header-images">
+          <img 
+            src={nutritionImage2} 
+            alt="Nutrition Food 2" 
+            className="nutrition-header-image" 
+          />
+        </div>
+      </div>
 
       <div className="form-group">
         <input
@@ -104,7 +122,7 @@ const NutritionTracker = () => {
           <option value="Dinner">Dinner</option>
           <option value="Snack">Snack</option>
         </select>
-        <button onClick={handleAddLog}>Add Log</button>
+        <button onClick={handleAddLog}>Add food Log</button>
       </div>
 
       <div className="date-navigation">
