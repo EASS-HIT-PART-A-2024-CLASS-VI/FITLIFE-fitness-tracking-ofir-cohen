@@ -1,11 +1,8 @@
 import React, { useState } from 'react';
 import './Login.css';
 import logo from '../assets/fitlife_logo.png';
+import loginBackground from '../assets/login-background.jpg';
 
-/**
- * Login Component
- * Handles both login and registration functionalities with form validation.
- */
 const Login = ({ onLogin }) => {
   const [isRegistering, setIsRegistering] = useState(false);
   const [formData, setFormData] = useState({
@@ -19,20 +16,11 @@ const Login = ({ onLogin }) => {
   });
   const [error, setError] = useState('');
 
-  /**
-   * Handles input changes and updates form data state.
-   * @param {Object} e - The event object.
-   */
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  /**
-   * Handles form submission for both login and registration.
-   * Sends a request to the appropriate endpoint.
-   * @param {Object} e - The event object.
-   */
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
@@ -56,14 +44,12 @@ const Login = ({ onLogin }) => {
       }
 
       const data = await response.json();
-      console.log("Login Response:", data); // ✅ Debugging login response
+      console.log("Login Response:", data);
 
       if (!isRegistering) {
-        // ✅ Store token & user_id properly
         localStorage.setItem('token', data.access_token);
         console.log("✅ Token stored:", data.access_token);
 
-        // Fetch user details and store user_id
         const userResponse = await fetch('http://127.0.0.1:8000/me', {
           headers: {
             'Authorization': `Bearer ${data.access_token}`
@@ -72,16 +58,16 @@ const Login = ({ onLogin }) => {
 
         if (userResponse.ok) {
           const userData = await userResponse.json();
-          console.log("Fetched User Data:", userData); // ✅ Debugging user response
+          console.log("Fetched User Data:", userData);
 
           if (userData && userData.id) {
             localStorage.setItem('user_id', userData.id);
-            console.log("✅ User ID stored:", localStorage.getItem("user_id")); // Debugging
+            console.log("✅ User ID stored:", localStorage.getItem("user_id"));
           } else {
             throw new Error("User ID is missing in the response.");
           }
 
-          onLogin(); // Update app state
+          onLogin();
         } else {
           throw new Error("Failed to fetch user details.");
         }
@@ -96,7 +82,17 @@ const Login = ({ onLogin }) => {
   };
 
   return (
-    <div className="login-page">
+    <div 
+      className="login-page" 
+      style={{
+        backgroundImage: `url(${loginBackground})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        height: '100vh',
+        width: '100vw'
+      }}
+    >
       <div className="login-container">
         <img src={logo} alt="FitLife Logo" className="login-logo" />
         <h2 className="login-title">{isRegistering ? 'Register for FitLife' : 'Login to FitLife'}</h2>
@@ -165,7 +161,9 @@ const Login = ({ onLogin }) => {
           </button>
         </form>
         <p className="toggle-auth" onClick={() => setIsRegistering(!isRegistering)}>
-          {isRegistering ? 'Already have an account? Login' : 'Don’t have an account? Register here'}
+          {isRegistering 
+            ? 'Already have an account? Login' 
+            : "Don't have an account? Register here"}
         </p>
       </div>
     </div>

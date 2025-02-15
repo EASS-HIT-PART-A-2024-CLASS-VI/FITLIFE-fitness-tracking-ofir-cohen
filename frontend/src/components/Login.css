@@ -1,23 +1,34 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body, html {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden; 
+    overflow-y: auto; 
+}
+
 .login-page {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: url('../assets/login_background.png') no-repeat center center fixed;
-    background-size: cover;
     display: flex;
     justify-content: center;
     align-items: center;
+    height: 100vh;
+    width: 100vw;
 }
 
 .login-container {
-    background-color: rgba(0, 0, 0, 0.85);
-    padding: 40px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-    width: 400px;
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    width: 350px;
     text-align: center;
+    position: relative;
+    z-index: 10;
 }
 
 .login-logo {
@@ -27,42 +38,49 @@
 
 .login-title {
     font-size: 24px;
-    color: #fff;
+    color: #333;
     margin-bottom: 20px;
 }
 
-input {
+input, select {
     width: 100%;
     padding: 12px;
     margin: 10px 0;
-    border: none;
-    border-radius: 5px;
+    border: 2px solid #ced4da;
+    border-radius: 8px;
     font-size: 16px;
+    transition: border-color 0.3s ease;
+}
+
+input:focus, select:focus {
+    outline: none;
+    border-color: #1b1d1b;
 }
 
 .login-button {
     width: 100%;
     padding: 12px;
-    background-color: #4CAF50;
+    background-color: black;
     color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
     font-size: 18px;
     cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
 .login-button:hover {
-    background-color: #45a049;
+    background-color: #333;
 }
 
 .error-message {
-    color: red;
+    color: #dc3545;
     font-size: 14px;
+    margin-bottom: 15px;
 }
 
-/* Ensure proper color for the registration toggle link */
 .toggle-auth {
-    color: black;
+    color: #007bff;
     font-size: 14px;
     text-align: center;
     margin-top: 15px;
