@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import "./CalorieRecommendations.css"; 
+import calorieCalculatorImage from '../assets/calorie-calculator-image.jpg';
 
 const CalorieRecommendations = () => {
   const [formData, setFormData] = useState({
@@ -45,7 +46,14 @@ const CalorieRecommendations = () => {
 
   return (
     <div className="calorie-recommendations">
-      <h1>Calorie Recommendations</h1>
+      <div className="calorie-header">
+        <h1>Calorie Recommendations</h1>
+        <img 
+          src={calorieCalculatorImage} 
+          alt="Calorie Calculator" 
+          className="calorie-header-image" 
+        />
+      </div>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label>Age:</label>
