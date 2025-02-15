@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './FitnessBot.css';
+import fitnessBotImage from '../assets/fitness-bot-image.jpg';
 
 function FitnessBot() {
   const [messages, setMessages] = useState([]);
@@ -10,7 +11,7 @@ function FitnessBot() {
     const question = userInput.trim();
     if (!question) return;
 
-    // 1) Add user’s message to chat
+    // 1) Add user's message to chat
     setMessages(prev => [...prev, { sender: 'user', text: question }]);
     setUserInput('');
     setIsLoading(true);
@@ -28,11 +29,11 @@ function FitnessBot() {
         throw new Error(errData?.detail || 'Error from chatbot backend');
       }
 
-      // 3) Extract the bot’s answer
+      // 3) Extract the bot's answer
       const data = await response.json();
       const botReply = data.response || 'No response received.';
 
-      // 4) Add bot’s message to chat
+      // 4) Add bot's message to chat
       setMessages(prev => [...prev, { sender: 'bot', text: botReply }]);
     } catch (err) {
       console.error('Error in chatbot request:', err);
@@ -54,7 +55,14 @@ function FitnessBot() {
 
   return (
     <div className="fitness-bot-container">
-      <h2>FITNESS BOT</h2>
+      <div className="fitness-bot-header">
+        <h2>FITNESS BOT</h2>
+        <img 
+          src={fitnessBotImage} 
+          alt="Fitness Bot" 
+          className="fitness-bot-image" 
+        />
+      </div>
 
       <div className="messages">
         {messages.map((msg, i) => (

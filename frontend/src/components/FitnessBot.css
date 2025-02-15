@@ -1,78 +1,105 @@
-
 .fitness-bot-container {
     display: flex;
     flex-direction: column;
-    max-width: 600px;
+    max-width: 800px;
     margin: 2rem auto;
-    padding: 1rem;
-    border: 1px solid #ccc;
-    background-color: #fff;
-    border-radius: 8px;
-  }
-  
-  .fitness-bot-container h2 {
-    text-align: center;
-    margin-bottom: 1rem;
-    font-size: 1.5rem;
+    padding: 2rem;
+    background-color: #f8f9fa;
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+.fitness-bot-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+}
+
+.fitness-bot-container h2 {
+    margin: 0 1rem;
+    font-size: 2em;
     color: #333;
-  }
-  
-  .messages {
+}
+
+.fitness-bot-image {
+    width: 120px;
+    height: 120px;
+    object-fit: contain;
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+}
+
+.messages {
     flex: 1;
     min-height: 300px;
     max-height: 400px;
     overflow-y: auto;
     border: 1px solid #eee;
     background-color: #fafafa;
-    padding: 0.5rem;
+    padding: 1rem;
     margin-bottom: 1rem;
-    border-radius: 4px;
-  }
-  
-  .message {
-    margin: 0.5rem 0;
-    padding: 0.6rem;
-    border-radius: 4px;
+    border-radius: 8px;
+}
+
+.message {
+    margin: 0.75rem 0;
+    padding: 0.75rem;
+    border-radius: 8px;
     max-width: 80%;
-    line-height: 1.4;
-  }
-  
-  .user-msg {
+    line-height: 1.5;
+    word-wrap: break-word;
+}
+
+.user-msg {
     align-self: flex-end;
-    background-color: #c9ffc9; /* Light green for user messages */
-  }
-  
-  .bot-msg {
+    background-color: #e6f3e6; 
+    margin-left: auto;
+}
+
+.bot-msg {
     align-self: flex-start;
-    background-color: #f0f0f0; /* Light gray for bot messages */
-  }
-  
-  .input-area {
+    background-color: #f0f0f0; 
+}
+
+.input-area {
     display: flex;
     align-items: center;
-  }
-  
-  .input-area input {
+}
+
+.input-area input {
     flex: 1;
-    padding: 0.6rem;
+    padding: 0.75rem;
     font-size: 1rem;
-    margin-right: 0.5rem;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-  }
-  
-  .input-area button {
-    padding: 0.6rem 1rem;
+    margin-right: 0.75rem;
+    border-radius: 8px;
+    border: 2px solid #ced4da;
+    transition: border-color 0.3s ease;
+}
+
+.input-area input:focus {
+    outline: none;
+    border-color: #4CAF50;
+}
+
+.input-area button {
+    padding: 0.75rem 1.25rem;
     font-size: 1rem;
     cursor: pointer;
     background-color: #4CAF50;
     color: #fff;
     border: none;
-    border-radius: 4px;
-  }
-  
-  .input-area button:disabled {
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+}
+
+.input-area button:hover {
+    background-color: #45a049;
+}
+
+.input-area button:disabled {
     background-color: #ccc;
     cursor: not-allowed;
-  }
-  
+}

@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import './WorkoutTracker.css';
+import workoutImage1 from '../assets/workout-image-1.jpg';
+import workoutImage2 from '../assets/workout-image-2.jpg';
 
 const WorkoutTracker = () => {
-  // ✅ Ensure correct user ID is used
+  //  Ensure correct user ID is used
   const storedUserId = localStorage.getItem("userId");
   const userId = storedUserId ? storedUserId : 1; // Default to user 1 if no user ID found
 
@@ -11,7 +13,7 @@ const WorkoutTracker = () => {
   const [duration, setDuration] = useState('');
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
 
-  // ✅ Load workouts for the specific user & date from Local Storage
+  // Load workouts for the specific user & date from Local Storage
   useEffect(() => {
     const savedWorkouts = JSON.parse(localStorage.getItem(`workouts_${userId}`)) || {};
     setWorkouts(savedWorkouts[selectedDate] || []);
@@ -25,7 +27,7 @@ const WorkoutTracker = () => {
 
     const newWorkout = { id: Date.now(), exercise, duration: parseInt(duration) };
 
-    // ✅ Save workouts separately for each user
+    //  Save workouts separately for each user
     const savedWorkouts = JSON.parse(localStorage.getItem(`workouts_${userId}`)) || {};
     savedWorkouts[selectedDate] = [...(savedWorkouts[selectedDate] || []), newWorkout];
     localStorage.setItem(`workouts_${userId}`, JSON.stringify(savedWorkouts));
@@ -36,7 +38,7 @@ const WorkoutTracker = () => {
   };
 
   const deleteWorkout = (id) => {
-    // ✅ Remove a workout by ID and update Local Storage
+    // Remove a workout by ID and update Local Storage
     const savedWorkouts = JSON.parse(localStorage.getItem(`workouts_${userId}`)) || {};
     savedWorkouts[selectedDate] = savedWorkouts[selectedDate].filter(workout => workout.id !== id);
     localStorage.setItem(`workouts_${userId}`, JSON.stringify(savedWorkouts));
@@ -52,14 +54,30 @@ const WorkoutTracker = () => {
 
     setSelectedDate(newDate);
 
-    // ✅ Load workouts for the selected date & user
+    //  Load workouts for the selected date & user
     const savedWorkouts = JSON.parse(localStorage.getItem(`workouts_${userId}`)) || {};
     setWorkouts(savedWorkouts[newDate] || []);
   };
 
   return (
     <div className="workout-container">
-      <h1>Workout Tracker</h1>
+      <div className="workout-header">
+        <div className="workout-header-images">
+          <img 
+            src={workoutImage1} 
+            alt="Workout 1" 
+            className="workout-header-image" 
+          />
+        </div>
+        <h1>Workout Tracker</h1>
+        <div className="workout-header-images">
+          <img 
+            src={workoutImage2} 
+            alt="Workout 2" 
+            className="workout-header-image" 
+          />
+        </div>
+      </div>
       <div className="date-selector">
         <button className="date-button" onClick={() => changeDate(-1)}>← Previous Day</button>
         <span className="selected-date">{selectedDate}</span>
@@ -74,7 +92,7 @@ const WorkoutTracker = () => {
         {workouts.length > 0 ? (
           workouts.map((workout) => (
             <li key={workout.id} className="workout-item">
-              {workout.exercise}: {workout.duration} minutes
+              <span className="workout-text">{workout.exercise}: {workout.duration} minutes</span>
               <button className="delete-button" onClick={() => deleteWorkout(workout.id)}>X</button>
             </li>
           ))
