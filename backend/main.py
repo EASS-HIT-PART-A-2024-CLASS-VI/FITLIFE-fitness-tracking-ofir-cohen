@@ -3,8 +3,9 @@ from pydantic import BaseModel, Field
 from typing import Optional, Dict, Any
 import yaml
 import httpx
-from sqlalchemy import create_engine, Column, Integer, String, Float
+from sqlalchemy import create_engine, Column, Integer, String, Float, ForeignKey, DateTime
 from sqlalchemy.orm import declarative_base, sessionmaker, Session
+from sqlalchemy.sql import func  
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
@@ -14,7 +15,8 @@ import jwt
 from datetime import datetime, timedelta, timezone, date
 from app.database import get_db  
 from app.models import UserDB, WorkoutDB, NutritionLogDB, WeightLogDB 
-#from app.LLM_CHATBOT.llm_chatbot_service import router as llm_chatbot_router
+import secrets
+from sqlalchemy import text
 
 
 # Load configuration from YAML file
@@ -33,8 +35,7 @@ app = FastAPI(
 
 app = FastAPI()
 
-# ✅ Register the LLM_CHATBOT API
-#app.include_router(llm_chatbot_router, prefix="/api", tags=["LLM_CHATBOT"])
+
 
 
 # CORS middleware setup
@@ -77,6 +78,7 @@ class UserDB(Base):
     gender = Column(String, nullable=True)
     height = Column(Float, nullable=True)
     weight = Column(Float, nullable=True)
+    email = Column(String, nullable=True, unique=True)
 
 class WorkoutDB(Base):
     __tablename__ = "workouts"
@@ -100,10 +102,13 @@ class WeightLogDB(Base):
     weight = Column(Float, nullable=False)
     date = Column(String, nullable=False)
 
-    
-
-# Create tables
-Base.metadata.create_all(bind=engine)
+class PasswordResetToken(Base):
+    __tablename__ = "password_reset_tokens"
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    token = Column(String, unique=True, nullable=False)
+    created_at = Column(DateTime, nullable=False, server_default=func.now())
+    expires_at = Column(DateTime, nullable=False)
 
 # Dependency to get database session
 def get_db():
@@ -144,6 +149,17 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
         raise HTTPException(status_code=401, detail="Token expired")
     except jwt.PyJWTError:
         raise HTTPException(status_code=401, detail="Invalid token")
+    
+def add_email_column(db: Session):
+    try:
+        # Use a more robust method to add column only if it doesn't exist
+        db.execute(text('''
+            ALTER TABLE users ADD COLUMN IF NOT EXISTS email TEXT;
+        '''))
+        db.commit()
+    except Exception as e:
+        print(f"Error adding email column: {e}")
+        db.rollback()
 
 # Models for data validation
 class User(BaseModel):
@@ -178,7 +194,16 @@ class WeightLogRequest(BaseModel):
     weight: float
     date: date
 
+class PasswordResetRequest(BaseModel):
+    username: str
+    email: Optional[str] = None
 
+class PasswordResetConfirm(BaseModel):
+    username: str
+    new_password: str
+
+# Create tables
+Base.metadata.create_all(bind=engine)
 # General Endpoints
 @app.get("/", summary="Root Endpoint", tags=["General"])
 def read_root():
@@ -188,8 +213,12 @@ def read_root():
 # Authentication Endpoints
 @app.post("/register", summary="Register User", tags=["Authentication"])
 def register_user(user: User, db: Session = Depends(get_db)):
+    # First, try to add the email column (this is safe to call multiple times)
+    add_email_column(db)
+
     if db.query(UserDB).filter(UserDB.username == user.username).first():
         raise HTTPException(status_code=400, detail="Username already taken")
+    
     hashed_password = get_password_hash(user.password)
     db_user = UserDB(
         username=user.username,
@@ -199,6 +228,7 @@ def register_user(user: User, db: Session = Depends(get_db)):
         gender=user.gender,
         height=user.height,
         weight=user.weight,
+        email=user.email,  # Add this line
     )
     db.add(db_user)
     db.commit()
@@ -213,10 +243,9 @@ def register_user(user: User, db: Session = Depends(get_db)):
             "gender": db_user.gender,
             "height": db_user.height,
             "weight": db_user.weight,
+            "email": db_user.email,
         },
     }
-
-
 @app.post("/login", response_model=Token, summary="User Login", tags=["Authentication"])
 def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
     user = db.query(UserDB).filter(UserDB.username == form_data.username).first()
@@ -441,3 +470,49 @@ def download_training_program(goal: str):
         "Content-Disposition": f"attachment; filename={goal}.pdf",
     }
     return FileResponse(file_path, media_type="application/pdf", headers=headers)
+
+    # endpoints for password reset
+
+@app.post("/password-reset-request")
+def request_password_reset(reset_request: PasswordResetRequest, db: Session = Depends(get_db)):
+    # First, try to add the email column (this is safe to call multiple times)
+    add_email_column(db)
+
+    # Find user by username
+    user = db.query(UserDB).filter(UserDB.username == reset_request.username).first()
+    
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+@app.post("/password-reset-confirm")
+def reset_password(reset_data: PasswordResetConfirm, db: Session = Depends(get_db)):
+    """
+    Confirm password reset for a user
+    """
+    # Validate input
+    if not reset_data.username or not reset_data.new_password:
+        raise HTTPException(status_code=400, detail="Username and new password are required")
+
+    # Find the user by username
+    user = db.query(UserDB).filter(UserDB.username == reset_data.username).first()
+    
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    # Validate the password (e.g., minimum length, complexity)
+    if len(reset_data.new_password) < 8:
+        raise HTTPException(status_code=400, detail="Password must be at least 8 characters long")
+
+    # Hash the new password
+    hashed_password = get_password_hash(reset_data.new_password)
+    
+    # Update the user's password
+    user.password = hashed_password
+    
+    # Commit the changes
+    db.commit()
+
+    return {
+        "status": "success", 
+        "message": "Password reset successful"
+    }
