@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import './Navbar.css'; // Ensure this import is present
 
 const Navbar = () => {
   const location = useLocation();
@@ -10,14 +11,16 @@ const Navbar = () => {
   }
 
   return (
-    <nav style={{ padding: '10px', backgroundColor: '#f0f0f0' }}>
-      <ul style={{ listStyleType: 'none', display: 'flex', gap: '20px' }}>
-        <li><Link to="/">Dashboard</Link></li>
-        <li><Link to="/workouts">Workout Tracker</Link></li>
-        <li><Link to="/nutrition">Nutrition Tracker</Link></li>
-        <li><Link to="/weight">Weight Tracker</Link></li>
-        <li><Link to="/calories">Calorie Recommendations</Link></li>
-        <li><Link to="/training-programs">Training Programs</Link></li>
+    <nav className="navbar">
+      <ul className="navbar-menu">
+        <li><Link to="/dashboard" className="navbar-link">Dashboard</Link></li>
+        <li><Link to="/workouts" className="navbar-link">Workout Tracker</Link></li>
+        <li><Link to="/nutrition" className="navbar-link">Nutrition Tracker</Link></li>
+        <li><Link to="/weight" className="navbar-link">Weight Tracker</Link></li>
+        <li><Link to="/calories" className="navbar-link">Calorie Recommendations</Link></li>
+        <li><Link to="/training-programs" className="navbar-link">Training Programs</Link></li>
+        <li><Link to="/fitness-bot" className="navbar-link">Fitness Bot</Link></li>
+        <li><Link to="/logout" className="navbar-link logout-button">Logout</Link></li>
       </ul>
     </nav>
   );
