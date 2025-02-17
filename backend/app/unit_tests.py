@@ -1,3 +1,8 @@
+import warnings
+from sqlalchemy.exc import SAWarning
+# Suppress DeprecationWarning for SQLite3 date adapter and MovedIn20Warning
+warnings.filterwarnings("ignore", category=DeprecationWarning)
+warnings.filterwarnings("ignore", category=SAWarning)
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
