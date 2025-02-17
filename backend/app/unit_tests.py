@@ -175,7 +175,6 @@ def test_add_workout():
     assert response.status_code == 200, f"Failed with response: {response.json()}"
     assert response.json()["message"] == "Workout added successfully"
 
-# The rest of the tests (get_workouts, add_nutrition_log, etc.) can use the same pattern
 
 def test_get_workouts():
     clear_test_database()
@@ -232,6 +231,37 @@ def test_get_weight_logs():
     response = client.get("/weight/1")
     assert response.status_code == 200
     assert "logs" in response.json()
+
+# Test Recommended Calories
+def test_recommended_calories():
+    clear_test_database()  # Clear database before running the test
+    params = {
+        "age": 30,
+        "weight": 75.5,
+        "height": 180,
+        "gender": "male",
+        "activity_level": "medium",
+        "target": "weight loss"
+    }
+    response = client.get("/recommended-calories", params=params)
+    assert response.status_code == 200
+    assert "recommended_calories" in response.json()
+
+# Test Training Programs
+def test_training_program_list():
+    clear_test_database()  # Clear database before running the test
+    response = client.get("/training-programs")
+    assert response.status_code == 200
+    data = response.json()
+    assert "available_programs" in data
+    assert "muscle_building" in data["available_programs"]
+
+def test_training_program_download():
+    clear_test_database()  # Clear database before running the test
+    response = client.get("/training-programs/muscle_building")
+    assert response.status_code == 200
+    assert response.headers["content-type"] == "application/pdf"
+    assert response.headers["content-disposition"] == "attachment; filename=muscle_building.pdf"
 
 def test_password_reset_request():
     clear_test_database()
