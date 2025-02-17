@@ -170,6 +170,8 @@ class User(BaseModel):
     gender: Optional[str] = Field(None, description="Gender of the user")
     height: Optional[float] = Field(None, description="Height in cm")
     weight: Optional[float] = Field(None, description="Weight in kg")
+    email: Optional[str] = None
+
 
 class Token(BaseModel):
     access_token: str
