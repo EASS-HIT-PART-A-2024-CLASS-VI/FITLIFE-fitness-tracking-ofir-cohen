@@ -1,7 +1,7 @@
 # 💪 FitLife - Fitness Tracking App
 
 <div align="center">
-  <img src="frontend/src/assets/logo.png" alt="FitLife Logo" width="200">
+<img src="https://github.com/user-attachments/assets/a1b01939-021f-4df6-851a-221fb8026d9c" alt="logo" style="width: 150px;">
 
   A comprehensive fitness and nutrition tracking system to help users achieve their health goals.
 
@@ -32,6 +32,9 @@ The **FitLife** application is a full-stack fitness tracking platform built with
 <div align="center">
   <img src="frontend/src/assets/architecture_diagram.svg" alt="Architecture Diagram" width="100%">
 </div>
+
+```
+
 fitlife-app/
 ├── backend/               # FastAPI backend services
 │   ├── app/
@@ -50,7 +53,9 @@ fitlife-app/
 │   │   └── App.js         # Main application
 │   └── Dockerfile
 └── docker-compose.yml     # Container orchestration
-Copy
+
+```
+
 ---
 
 ## 🛠️ Setting Up the Project
@@ -59,24 +64,40 @@ Copy
 ```bash
 git clone https://github.com/EASS-HIT-PART-A-2024-CLASS-VI/FITLIFE-fitness-tracking-ofir-cohen.git
 cd FITLIFE-fitness-tracking-ofir-cohen
+```
+
 2️⃣ Environment Configuration
 For the LLM Chatbot functionality, you'll need to configure environment variables:
 
 Create a .env.example file in the backend/LLM_CHATBOT/ directory with:
 
-CopyVARIABLE_1=your_value_here
+```
+VARIABLE_1=your_value_here
 VARIABLE_2=your_value_here
+```
+
 
 Copy the example file and replace with actual values:
 
-bashCopycp backend/LLM_CHATBOT/.env.example backend/LLM_CHATBOT/.env
+  ```bash
+
+cp backend/LLM_CHATBOT/.env.example backend/LLM_CHATBOT/.env
+   ```
 
 Update the values in your .env file:
 
-CopyVARIABLE_1=actual_value
+```
+VARIABLE_1=actual_value
 VARIABLE_2=actual_value
+```
+
 3️⃣ Start the Application
-bashCopydocker-compose up --build
+  ```bash
+
+
+docker-compose up --build
+```
+
 
 📚 Backend API
 🔐 Authentication
@@ -128,14 +149,24 @@ Fitness Bot: AI-powered fitness assistant
 
 
 🧪 Testing
-Run the test suite with:
-bashCopy# Backend tests
-cd backend
-pytest
+# Backend tests
+### **Unit Tests**
+- Test individual endpoints and internal logic without external dependencies:
+  ```bash
+  pytest app/unit_tests.py
+  ```
 
+### **Integration Tests**
+- Test the system as a whole, including interactions with external services:
+  ```bash
+  pytest app/integration_test.py
+  ```
 # Frontend tests
-cd frontend
-npm test
+  ```bash
+   cd frontend
+   npm test
+  ```
+
 
 🔧 Technologies Used
 Backend
