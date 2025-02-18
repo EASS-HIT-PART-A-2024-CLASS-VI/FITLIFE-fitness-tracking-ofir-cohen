@@ -7,13 +7,15 @@ from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from unittest.mock import patch
-from main import app, Base, get_db
+from app.main import app
+from app.database import Base, get_db
 import time
 import os
 import requests
 import pytest
 from pydantic import BaseModel, Field
 from typing import Optional
+import sqlalchemy
 
 # Update the User model to match the one in main.py
 class User(BaseModel):
@@ -217,7 +219,7 @@ def test_get_nutrition_logs():
     response = client.get("/nutrition/1")
     assert response.status_code == 200
     assert "logs" in response.json()
-
+    
 def test_add_weight_log():
     clear_test_database()
     user_data = create_test_user()

@@ -48,7 +48,6 @@ class NutritionLogDB(Base):
     user_id = Column(Integer, nullable=False)
     food = Column(String, nullable=False)
     calories = Column(Integer, nullable=False)
-    date = Column(String, nullable=False)  
 
 class WeightLogDB(Base):
     __tablename__ = "weight_logs"
