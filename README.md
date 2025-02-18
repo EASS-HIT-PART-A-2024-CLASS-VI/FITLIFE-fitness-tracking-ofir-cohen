@@ -1,179 +1,162 @@
-# **FitLife - Fitness Tracking App by Ofir Cohen**
-<img src="https://github.com/user-attachments/assets/a1b01939-021f-4df6-851a-221fb8026d9c" alt="logo" style="width: 150px;">
+# 💪 FitLife - Fitness Tracking App
 
-A professional fitness and nutrition tracking system designed to help users monitor their progress, achieve their fitness goals, and maintain a healthy lifestyle. Featuring calorie tracking, personalized training recommendations, and persistent data storage.
+<div align="center">
+  <img src="frontend/src/assets/logo.png" alt="FitLife Logo" width="200">
+
+  A comprehensive fitness and nutrition tracking system to help users achieve their health goals.
+
+  [![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi)](https://fastapi.tiangolo.com)
+  [![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org)
+  [![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://docker.com)
+  [![SQLite](https://img.shields.io/badge/SQLite-003B57?style=for-the-badge&logo=sqlite&logoColor=white)](https://sqlite.org)
+</div>
+
+The **FitLife** application is a full-stack fitness tracking platform built with FastAPI and React. It offers personalized workout tracking, nutrition logging, weight monitoring, and AI-powered fitness advice. The backend is containerized with Docker for easy deployment, while the frontend provides an intuitive interface for visualizing fitness progress.
 
 ---
 
-## **Overview**
+## 🚀 Features
 
-The **FitLife** application is a comprehensive full-stack application built using **FastAPI** for the backend and **React** for the frontend. It offers a wide range of features, including user data management, fitness progress tracking, training program recommendations, and visualizations. The system provides personalized calorie recommendations based on user metrics and fitness goals.
-
-To ensure scalability and maintainability, the backend is fully containerized with **Docker**, while the frontend is developed with modern **React** components and features.
+- **User Authentication**: Secure JWT-based authentication with password hashing
+- **Workout Tracking**: Log and visualize exercise routines with duration tracking
+- **Nutrition Logs**: Track daily food intake with calorie counting and visual charts
+- **Weight Monitoring**: Record weight changes over time with interactive graphs
+- **Personalized Calorie Recommendations**: Get customized calorie targets based on physical attributes
+- **Downloadable Training Programs**: Access specialized workout plans (muscle building, weight loss, etc.)
+- **AI Fitness Bot**: Get answers to fitness and nutrition questions powered by LLM technology
 
 ---
 
-## **Key Features**
-- **User Authentication**: Secure user authentication with JWT, allowing users to log in and access their personalized dashboard.
-- **Persistent User Management**: Create and manage user profiles with long-term data storage using SQLite.
-- **Workout Tracking**: Log and retrieve detailed workout records for users.
-- **Nutrition Logs**: Track daily calorie intake with nutrition logs.
-- **Weight Logs**: Record and monitor weight data over time for better progress tracking.
-- **Calorie Recommendation**: Calculate and recommend personalized daily calorie intake.
-- **Downloadable Training Programs**: Allow users to download specific training plans based on their fitness goals (e.g., muscle building, weight loss, general fitness, or home workouts).
-- **Interactive Frontend**: User-friendly React interface for visualizing data and interacting with the application.
-- **RESTful API**: Interactive API documentation with Swagger UI available at `/docs`.
----
+## 🗂️ Project Architecture
 
-## **Project Structure**
-
-```
-ofircohen-fitness-tracker/
-├── backend/
-│   ├── Dockerfile                       # Docker configuration for the backend
-│   ├── config.yaml                      # Application configuration
-│   ├── fitness_tracker.db               # SQLite database for persistent storage
-│   ├── main.py                          # FastAPI backend with endpoints
-│   ├── requirements.txt                 # Python dependencies
-<<<<<<< HEAD
-│   ├── app/ 
-│   │   ├── unit_tests.py                # Pytest unit tests
-│   │   ├── integration_test.py          # Pytest integration tests
-    │   ├── models.py                    # Database models
-    │   ├── database.py                  # SQLite connection       
-│   ├──.gitignore                        # Git ignore file
-=======
-│   ├──.gitignore                        # Git ignore file
-│   ├── app/ 
-│   │   ├── unit_tests.py                # Pytest unit tests
-│   │   ├── integration_test.py          # Pytest integration tests
-|   │   ├── models.py                    # Database models
-|   │   ├── database.py                  # SQLite connection       
->>>>>>> 53e5acb8d7067700cdceeee6aa0c022792966b70
-
-├── frontend/
+<div align="center">
+  <img src="frontend/src/assets/architecture_diagram.svg" alt="Architecture Diagram" width="100%">
+</div>
+fitlife-app/
+├── backend/               # FastAPI backend services
+│   ├── app/
+│   │   ├── api/           # API endpoints
+│   │   ├── core/          # Core functionality
+│   │   ├── models.py      # Database models
+│   │   └── database.py    # Database connection
+│   ├── LLM_CHATBOT/       # Fitness Bot microservice
+│   ├── files/             # Training program PDFs
+│   └── Dockerfile
+├── frontend/              # React frontend
 │   ├── public/
-│   │   ├── index.html                   # HTML entry point
 │   ├── src/
-│   │   ├── components/                  # React components
-│   │   ├── App.js                       # Main application logic
-│   │   ├── App.css                      # Application styles
-│   │   ├── index.js                     # React entry point
-│   ├── Dockerfile                       # Docker configuration for the frontend
-│   ├── .gitignore                       # Git ignore file
-│   ├── package.json                     # Node.js dependencies
-│   ├── package-lock.json                # Locked dependency versions
-├── docker-compose.yml                   # Docker Compose for container orchestration
-└── README.md                            # Project documentation
-```
+│   │   ├── components/    # React components
+│   │   ├── assets/        # Images and static files
+│   │   └── App.js         # Main application
+│   └── Dockerfile
+└── docker-compose.yml     # Container orchestration
+Copy
 ---
 
-## **Endpoints**
+## 🛠️ Setting Up the Project
 
-### **General**
-- **`GET /`**: Returns a welcome message.
+### 1️⃣ Clone the Repository
+```bash
+git clone https://github.com/EASS-HIT-PART-A-2024-CLASS-VI/FITLIFE-fitness-tracking-ofir-cohen.git
+cd FITLIFE-fitness-tracking-ofir-cohen
+2️⃣ Environment Configuration
+For the LLM Chatbot functionality, you'll need to configure environment variables:
 
-### **Authentication**
-- **`POST /register`**: Register a new user.
-- **`POST /login`**: Log in and retrieve a JWT.
-- **`GET /me`**: Retrieve the current user's details.
+Create a .env.example file in the backend/LLM_CHATBOT/ directory with:
 
-### **Users**
-- **`GET /users/{user_id}`**: Retrieve user details by ID.
+CopyVARIABLE_1=your_value_here
+VARIABLE_2=your_value_here
 
-### **Workouts**
-- **`POST /workouts`**: Log a workout for a user.  
-- **`GET /workouts/{user_id}`**: Retrieve all workouts for a specific user.
+Copy the example file and replace with actual values:
 
-### **Nutrition Logs**
-- **`POST /nutrition`**: Log a nutrition entry for a user.
-- **`GET /nutrition/{user_id}`**: Retrieve all nutrition logs for a specific user.
+bashCopycp backend/LLM_CHATBOT/.env.example backend/LLM_CHATBOT/.env
 
-### **Weight Logs**
-- **`POST /weight`**: Log weight data for a user.  
-- **`GET /weight/{user_id}`**: Retrieve weight logs for a specific user.
+Update the values in your .env file:
 
-### **Training Programs**
-- **`GET /training-programs`**: Get a list of available training programs.
-- **`GET /training-programs/{goal}`**: Download a specific training program based on the user's goal (e.g., muscle building, weight loss).
+CopyVARIABLE_1=actual_value
+VARIABLE_2=actual_value
+3️⃣ Start the Application
+bashCopydocker-compose up --build
 
----
+📚 Backend API
+🔐 Authentication
 
-## **Technologies Used**
+POST /register: Register a new user
+POST /login: Authenticate and receive JWT
+GET /me: Get current user details
 
-### **Backend**
-- **Python 3.12-slim**: Core backend development language.
-- **FastAPI**: A modern web framework for building APIs quickly and efficiently.
-- **Pydantic**: For data validation and configuration management.
-- **SQLAlchemy**: ORM for managing database interactions.
-- **SQLite**: Lightweight database for persistent data storage.
-- **JWT**: Secure token-based user authentication.
-- **bcrypt**: For secure password hashing.
+💪 Workouts
 
-### **Frontend**
-- **React**: A JavaScript library for building user interfaces.
-- **Axios**: For interacting with the backend API.
-- **Chart.js**: For creating fitness progress visualizations.
-- **React Router**: For navigation and routing.
+POST /workouts: Log a workout
+GET /workouts/{user_id}: Retrieve workouts by date
 
-### **Containerization**
-- **Docker**: Simplifies deployment with containerized environments.
-- **Docker Compose**: Orchestrates multi-container services.
+🥗 Nutrition
 
----
+POST /nutrition: Add food and calories
+GET /nutrition/{user_id}: Get nutrition history
 
-## **How to Run the Project**
+⚖️ Weight
 
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/your-repo-link.git
-   cd ofircohen-fitness-tracker
-   ```
+POST /weight: Log weight measurement
+GET /weight/{user_id}: Retrieve weight history
 
-2. **Build and start the containers:**
-   ```bash
-   docker-compose up --build
-   ```
+📊 Recommendations
 
-3. **Access the backend:**
-   - **API Base URL:** [http://127.0.0.1:8000](http://127.0.0.1:8000)
-   - **Swagger UI:** [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
+GET /recommended-calories: Get personalized calorie targets
 
-4. **Access the frontend:**
-   - **Frontend URL:** [http://localhost:3000](http://localhost:3000)
+📑 Training Programs
 
----
+GET /training-programs: List available programs
+GET /training-programs/{goal}: Download specific program PDF
 
-## **Testing**
+🤖 Fitness Bot
 
-### **Unit Tests**
-- Test individual endpoints and internal logic without external dependencies:
-  ```bash
-  pytest app/unit_tests.py
-  ```
+POST /chatbot: Ask fitness and nutrition questions
 
-### **Integration Tests**
-- Test the system as a whole, including interactions with external services:
-  ```bash
-  pytest app/integration_test.py
-  ```
 
----
+🖥️ Frontend
+The React frontend provides an intuitive interface for accessing all FitLife features:
 
-## **Future Work**
+Login/Registration: Secure user authentication
+Dashboard: Overview of fitness metrics
+Workout Tracker: Log and visualize exercise routines
+Nutrition Tracker: Food logging with calorie visualization
+Weight Tracker: Weight progress charts with time filtering
+Calorie Recommendations: Personalized calorie targets
+Training Programs: Download specialized workout plans
+Fitness Bot: AI-powered fitness assistant
 
-1. **Frontend Enhancements**:
-   - Add more interactive components for an improved user experience.
-   - Include dark mode toggle and accessibility features.
-2. **Data Visualization**:
-   - Expand charts and visualizations to include trends and insights.
 
----
+🧪 Testing
+Run the test suite with:
+bashCopy# Backend tests
+cd backend
+pytest
 
-## **Contact**
+# Frontend tests
+cd frontend
+npm test
 
-For questions, suggestions, or feedback, please reach out:
+🔧 Technologies Used
+Backend
 
-- **Name**: Ofir Cohen  
-- **Email**: ofircohen599@gmail.com  
-- **GitHub**: [ofiz](https://github.com/ofiz)
+FastAPI: Modern, high-performance web framework
+SQLite: Lightweight database for data persistence
+SQLAlchemy: SQL toolkit and ORM
+Pydantic: Data validation and settings management
+JWT: Secure authentication
+Docker: Containerization for deployment
+
+Frontend
+
+React: JavaScript library for building user interfaces
+Chart.js: Interactive data visualization
+Axios: HTTP client for API requests
+Bootstrap: Responsive UI components
+
+
+👨‍💻 Author
+
+Ofir Cohen
+Email: ofircohen599@gmail.com
+GitHub: ofiz
