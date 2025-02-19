@@ -29,7 +29,7 @@ The **FitLife** application is a full-stack fitness tracking platform built with
 
 ## 🗂️ Project Architecture
 
-  <img src="frontend/src/assets/architecture_diagram.png" alt="Architecture Diagram" width="50%">
+  <img src="frontend/src/assets/architecture_diagram.png" alt="Architecture Diagram" width="65%">
 
 
 ```
