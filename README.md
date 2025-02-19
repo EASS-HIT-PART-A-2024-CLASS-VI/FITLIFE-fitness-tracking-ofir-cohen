@@ -67,7 +67,7 @@ cd FITLIFE-fitness-tracking-ofir-cohen
 ```
 
 ## 2️⃣ Environment Configuration
-For the LLM Chatbot functionality(and more necessary environment variables for the project) you'll need to configure environment variables by following these steps:
+For the LLM Chatbot functionality (and more necessary environment variables for the project) you'll need to configure environment variables by following these steps:
 1. Visit [MISTRAL AI ](https://console.mistral.ai/) to obtain your API key.
 2. Create a `.env.example` file in the `backend` directory with:
 
@@ -142,9 +142,6 @@ The React frontend provides an intuitive interface for accessing all FitLife fea
 
 ### **Login/Registration**
 Secure user authentication with JWT tokens and password protection
-
-### **Dashboard**
-Overview of fitness metrics with progress summaries and activity stats
 
 ### **Workout Tracker**
 Log and visualize exercise routines with duration tracking and history views
