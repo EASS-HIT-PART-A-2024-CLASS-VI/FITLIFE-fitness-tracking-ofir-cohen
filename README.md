@@ -164,13 +164,13 @@ AI-powered fitness assistant for nutrition and exercise guidance
 #### Unit Tests
 - Test individual endpoints and internal logic without external dependencies:
   ```bash
-  pytest app/unit_tests.py
+  pytest tests/unit_tests.py
   ```
 
 #### Integration Tests
 - Test the system as a whole, including interactions with external services:
   ```bash
-  pytest app/integration_test.py
+  pytest tests/integration_test.py
   ```
 # Frontend tests
   ```bash
