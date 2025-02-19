@@ -52,6 +52,7 @@ fitlife-app/
 │   │   └── App.js         # Main application
 │   └── Dockerfile
 └── docker-compose.yml     # Container orchestration
+└── README.md    # Project documentation
 
 ```
 
@@ -92,7 +93,12 @@ DATABASE_URL=db_url
 SECRET_KEY=your_secret_key
 
 ```
+load environment variables from the .env file:
 
+  ```bash
+export $(cat .env | xargs)
+echo 'MISTRAL_API_KEY=<YOUR_API_KEY>' > backend/.env
+```
 ### 3️⃣ Start the Application
   ```bash
 
