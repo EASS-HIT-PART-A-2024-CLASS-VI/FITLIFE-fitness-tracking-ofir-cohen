@@ -235,6 +235,20 @@ FitLife uses SQLite as its database solution, providing a lightweight yet powerf
 - No storage of plaintext sensitive information
 - Row-level access control based on user authentication
 
+ ## Port Configuration
+
+### Frontend
+- **Port:** 3000
+- **URL:** http://localhost:3000
+
+### Backend API
+- **Port:** 8000
+- **URL:** http://localhost:8000
+
+### LLM Chatbot
+- **Port:** 8001
+- **URL:** http://localhost:8001
+
 ## 🧪 Testing
 
 ### **Backend Tests**
