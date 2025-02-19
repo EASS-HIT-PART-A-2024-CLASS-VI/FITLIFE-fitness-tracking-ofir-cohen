@@ -7,13 +7,14 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install dependencies
-RUN npm cache clean --force && npm install --legacy-peer-deps
+RUN npm ci --legacy-peer-deps
 
 # Copy application files
 COPY . .
 
+RUN npm run build
+
 # Expose port
 EXPOSE 3000
 
-# Start the application
 CMD ["npm", "start"]
