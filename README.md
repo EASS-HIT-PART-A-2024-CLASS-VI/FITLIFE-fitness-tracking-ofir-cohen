@@ -29,8 +29,8 @@ The **FitLife** application is a full-stack fitness tracking platform built with
 
 ## 🗂️ Project Architecture
 
-  <img src="frontend/src/assets/architecture_diagram.png" alt="Architecture Diagram" width="100%">
-=======
+  <img src="frontend/src/assets/architecture_diagram.png" alt="Architecture Diagram" width="50%">
+
 
 ```
 
@@ -66,13 +66,14 @@ cd FITLIFE-fitness-tracking-ofir-cohen
 ```
 
 ## 2️⃣ Environment Configuration
-For the LLM Chatbot functionality, you'll need to configure environment variables:
-
-1. Create a `.env.example` file in the `backend/LLM_CHATBOT/` directory with:
+For the LLM Chatbot functionality(and more necessary environment variables for the project) you'll need to configure environment variables by following these steps:
+1. Visit [MISTRAL AI ](https://console.mistral.ai/) to obtain your API key.
+2. Create a `.env.example` file in the `backend` directory with:
 
 ```
-VARIABLE_1=your_value_here
-VARIABLE_2=your_value_here
+VARIABLE_1=your_value  # for api key
+VARIABLE_2=your_value  # for db url
+VARIABLE_3=your_value  # for secret key to db
 ```
 
 
@@ -80,14 +81,16 @@ Copy the example file and replace with actual values:
 
   ```bash
 
-cp backend/LLM_CHATBOT/.env.example backend/LLM_CHATBOT/.env
+cp backend/.env.example backend/.env
    ```
 
 Update the values in your .env file:
 
 ```
-VARIABLE_1=actual_value
-VARIABLE_2=actual_value
+MISTRAL_API_KEY=your_api_key 
+DATABASE_URL=db_url
+SECRET_KEY=your_secret_key
+
 ```
 
 ### 3️⃣ Start the Application
@@ -155,19 +158,93 @@ Download specialized workout plans for different fitness objectives
 ### **Fitness Bot**
 AI-powered fitness assistant for nutrition and exercise guidance
 
+## 🤖 LLM Chatbot Microservice
+
+The FitLife application features an advanced AI-powered fitness assistant built on Mistral AI technology, implemented as a dedicated microservice:
+
+### **Mistral AI Integration**
+- **Mistral 7B Foundation Model**: Leverages the powerful open-source large language model optimized for conversational applications
+- **Context-Aware Processing**: Utilizes Mistral's advanced attention mechanisms for improved understanding of fitness-related queries
+- **Efficient Inference**: Optimized for low-latency responses even with limited computational resources
+- **Instruction-Tuned**: Fine-tuned specifically for fitness domain knowledge and conversational interactions
+
+### **Architecture**
+- **Isolated Service**: Runs as an independent microservice for better scalability and resource allocation
+- **RESTful API**: Exposes endpoints for query submission and response retrieval
+- **Containerized Deployment**: Self-contained Docker image with Mistral runtime dependencies
+- **Stateless Design**: Maintains conversation history through client-side session management
+
+### **Key Features**
+- **Domain-Specific Knowledge**: Extensive fitness, nutrition, and wellness information
+- **Personalized Guidance**: Tailors responses based on user profiles and fitness objectives
+- **Multi-turn Conversations**: Maintains context across multiple exchanges for natural interaction
+- **Evidence-Based Responses**: Provides scientifically-backed fitness and nutrition information
+
+### **Technical Implementation**
+- **FastAPI Backend**: High-performance asynchronous framework for API endpoints
+- **Quantized Model**: 4-bit quantization for efficient deployment without significant accuracy loss
+- **Response Templating**: Structured output formatting for consistent user experience
+- **Security-First Design**: API key authentication and request validation
+
+### **Environment Configuration**
+- **MISTRAL_API_KEY**: Authentication token for Mistral AI API access
+- **MODEL_VERSION**: Configurable model version selection
+- **TEMPERATURE**: Adjustable response creativity parameter
+- **MAX_TOKENS**: Configurable response length limits
+- **CONTEXT_WINDOW**: Adjustable conversation history retention
+
+### **Example Capabilities**
+- Exercise form guidance with biomechanical understanding
+- Personalized training program recommendations
+- Nutritional advice based on dietary preferences and restrictions
+- Recovery strategies based on training intensity and frequency
+- Goal-specific fitness tracking recommendations
+
+## 💾 Database Design
+
+FitLife uses SQLite as its database solution, providing a lightweight yet powerful data persistence layer:
+
+### **Database Schema**
+- **Users Table**: Stores user profiles, authentication details, and personal metrics
+- **Workouts Table**: Records exercise sessions with duration, type, and date information
+- **Nutrition Logs**: Tracks food intake with calorie and nutritional information
+- **Weight Logs**: Stores weight measurements over time for progress tracking
+- **Training Programs**: References to downloadable fitness program PDFs
+
+### **Key Relationships**
+- One-to-many relationship between users and workout logs
+- One-to-many relationship between users and nutrition entries
+- One-to-many relationship between users and weight measurements
+
+### **Data Access Layer**
+- **SQLAlchemy ORM**: Provides object-relational mapping for database operations
+- **Pydantic Models**: Ensures data validation and type safety
+- **Migration Support**: Database schema can evolve with application requirements
+
+### **Performance Considerations**
+- Optimized query patterns for frequent operations
+- Indexed fields for faster lookups (user_id, dates)
+- Efficient storage of time-series data for analytics
+- Minimal redundancy in the database schema
+
+### **Data Security**
+- Password hashing with bcrypt
+- No storage of plaintext sensitive information
+- Row-level access control based on user authentication
+
 ## 🧪 Testing
 
 ### **Backend Tests**
 #### Unit Tests
 - Test individual endpoints and internal logic without external dependencies:
   ```bash
-  pytest app/unit_tests.py
+  pytest tests/unit_tests.py
   ```
 
 #### Integration Tests
 - Test the system as a whole, including interactions with external services:
   ```bash
-  pytest app/integration_test.py
+  pytest tests/integration_test.py
   ```
 # Frontend tests
   ```bash
