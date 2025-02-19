@@ -66,9 +66,9 @@ cd FITLIFE-fitness-tracking-ofir-cohen
 ```
 
 ## 2️⃣ Environment Configuration
-For the LLM Chatbot functionality, you'll need to configure environment variables:
+For the LLM Chatbot functionality(and more necessary environment variables for the project) you'll need to configure environment variables by following these steps:
 1. Visit [MISTRAL AI ](https://console.mistral.ai/) to obtain your API key.
-2. Create a `.env.example` file in the `backend/LLM_CHATBOT/` directory with:
+2. Create a `.env.example` file in the `backend` directory with:
 
 ```
 VARIABLE_1=your_value  # for api key
@@ -81,7 +81,7 @@ Copy the example file and replace with actual values:
 
   ```bash
 
-cp backend/LLM_CHATBOT/.env.example backend/LLM_CHATBOT/.env
+cp backend/.env.example backend/.env
    ```
 
 Update the values in your .env file:
