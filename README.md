@@ -97,7 +97,7 @@ SECRET_KEY=your_secret_key
 
   ```bash
 export $(cat .env | xargs)
-echo 'MISTRAL_API_KEY=<YOUR_API_KEY>' >
+echo 'MISTRAL_API_KEY=<YOUR_API_KEY>' 
 ```
 ### 3️⃣ Start the Application
   ```bash
