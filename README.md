@@ -294,7 +294,7 @@ Click here to watch the demo video:
 
 <p align="center">
   <a href="https://youtu.be/0C77g-xDIg8">
-    <img src="./frontend/src/assets/demo.jpg" alt="Demo Video" width="500" />
+    <img src="./frontend/src/assets/demo.jpg" alt="Demo Video" width="750" height="450" />
   </a>
 </p>
 
