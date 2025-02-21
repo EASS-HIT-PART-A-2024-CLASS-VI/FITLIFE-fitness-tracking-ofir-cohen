@@ -290,7 +290,7 @@ FitLife uses SQLite as its database solution, providing a lightweight yet powerf
 
 ## 🎬 Demo
 
-Click on the image below to watch the demo video:
+Click here to watch the demo video:
 
 <p align="center">
   <a href="https://youtu.be/0C77g-xDIg8">
