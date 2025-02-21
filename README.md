@@ -263,7 +263,7 @@ FitLife uses SQLite as its database solution, providing a lightweight yet powerf
   ```bash
   pytest tests/integration_test.py
   ```
-# Frontend tests
+### Frontend tests
   ```bash
    cd frontend
    npm test
