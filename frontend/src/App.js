@@ -16,7 +16,6 @@ import CalorieRecommendations from './components/CalorieRecommendations';
 import TrainingPrograms from './components/TrainingPrograms';
 import Login from './components/Login';
 import Register from './components/Register';
-// 1) Import the new FitnessBot component
 import FitnessBot from './components/FitnessBot';
 
 import './App.css';
