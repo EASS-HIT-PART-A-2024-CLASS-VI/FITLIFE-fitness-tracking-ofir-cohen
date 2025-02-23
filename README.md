@@ -46,6 +46,7 @@ itlife-app/
 │   ├── tests/             # Test suites (unit tests and integration test)
 │   ├── requirements.txt   # Python dependencies for backend
 │   └── Dockerfile
+|
 ├── frontend/              # React frontend
 │   ├── public/
 │   ├── src/
