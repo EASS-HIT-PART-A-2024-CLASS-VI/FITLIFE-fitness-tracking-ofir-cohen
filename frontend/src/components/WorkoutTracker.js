@@ -38,7 +38,7 @@ const WorkoutTracker = () => {
   };
 
   const deleteWorkout = (id) => {
-    // Remove a workout by ID and update Local Storage
+    // Remove a workout by ID 
     const savedWorkouts = JSON.parse(localStorage.getItem(`workouts_${userId}`)) || {};
     savedWorkouts[selectedDate] = savedWorkouts[selectedDate].filter(workout => workout.id !== id);
     localStorage.setItem(`workouts_${userId}`, JSON.stringify(savedWorkouts));
