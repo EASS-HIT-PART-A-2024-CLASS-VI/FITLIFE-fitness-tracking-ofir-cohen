@@ -34,7 +34,7 @@ The **FitLife** application is a full-stack fitness tracking platform built with
 
 ```
 
-itlife-app/
+fitlife-app/
 ├── backend/               # FastAPI backend services
 │   ├── app/
 │   │   ├── api/           # API endpoints
