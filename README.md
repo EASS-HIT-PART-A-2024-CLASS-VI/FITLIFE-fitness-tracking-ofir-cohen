@@ -18,10 +18,10 @@ The **FitLife** application is a full-stack fitness tracking platform built with
 ## 🚀 Features
 
 - **User Authentication**: Secure JWT-based authentication with password hashing
-- **Workout Tracking**: Log and visualize exercise routines with duration tracking
+- **Workout Tracking**: Log exercise routines with duration tracking
 - **Nutrition Logs**: Track daily food intake with calorie counting and visual charts
 - **Weight Monitoring**: Record weight changes over time with interactive graphs
-- **Personalized Calorie Recommendations**: Get customized calorie targets based on physical attributes
+- **Personalized Calorie Recommendations**: Get customized calorie recommendations based on physical attributes and fitness goals.
 - **Downloadable Training Programs**: Access specialized workout plans (muscle building, weight loss, etc.)
 - **AI Fitness Bot**: Get answers to fitness and nutrition questions powered by LLM technology
 
@@ -34,25 +34,33 @@ The **FitLife** application is a full-stack fitness tracking platform built with
 
 ```
 
-fitlife-app/
+itlife-app/
 ├── backend/               # FastAPI backend services
 │   ├── app/
 │   │   ├── api/           # API endpoints
 │   │   ├── core/          # Core functionality
-│   │   ├── models.py      # Database models
+│   │   ├── models.py      # Database models/schemas
 │   │   └── database.py    # Database connection
 │   ├── LLM_CHATBOT/       # Fitness Bot microservice
 │   ├── files/             # Training program PDFs
+│   ├── tests/             # Test suites (unit tests and integration test)
+│   ├── requirements.txt   # Python dependencies for backend
 │   └── Dockerfile
 ├── frontend/              # React frontend
 │   ├── public/
 │   ├── src/
+│   │   ├── _mocks_/       # Test mock data
+│   │   ├── _tests_/       # Unit and integration tests
+│   │   ├── assets/        # Static files (images, fonts)
 │   │   ├── components/    # React components
-│   │   ├── assets/        # Images and static files
-│   │   └── App.js         # Main application
+│   │   ├── App.js         # Main application component
+│   │   ├── index.js       # Application entry point
+│   │   └── setupTests.js  # Test configuration
 │   └── Dockerfile
+|   ├── package-lock.json   # Locks dependencies to ensure consistent builds
+|   ├── package.json        # Project metadata, scripts, and dependencies
 └── docker-compose.yml     # Container orchestration
-└── README.md    # Project documentation
+└── README.md             # Project documentation
 
 ```
 
@@ -144,7 +152,7 @@ The React frontend provides an intuitive interface for accessing all FitLife fea
 Secure user authentication with JWT tokens and password protection
 
 ### **Workout Tracker**
-Log and visualize exercise routines with duration tracking and history views
+Log exercise routines with duration tracking and history views
 
 ### **Nutrition Tracker**
 Food logging with calorie visualization and nutritional breakdown charts
@@ -198,7 +206,6 @@ The FitLife application features an advanced AI-powered fitness assistant built 
 
 ### **Example Capabilities**
 - Exercise form guidance with biomechanical understanding
-- Personalized training program recommendations
 - Nutritional advice based on dietary preferences and restrictions
 - Recovery strategies based on training intensity and frequency
 - Goal-specific fitness tracking recommendations
@@ -207,7 +214,7 @@ The FitLife application features an advanced AI-powered fitness assistant built 
 
 FitLife uses SQLite as its database solution, providing a lightweight yet powerful data persistence layer:
 
-### **Database Schema**
+### **Database Schemas**
 - **Users Table**: Stores user profiles, authentication details, and personal metrics
 - **Workouts Table**: Records exercise sessions with duration, type, and date information
 - **Nutrition Logs**: Tracks food intake with calorie and nutritional information
@@ -244,10 +251,14 @@ FitLife uses SQLite as its database solution, providing a lightweight yet powerf
 ### Backend API
 - **Port:** 8000
 - **URL:** http://localhost:8000
+- **Swagger UI**: http://localhost:8000/docs
+
 
 ### LLM Chatbot
 - **Port:** 8001
 - **URL:** http://localhost:8001
+- **Swagger UI**: http://localhost:8001/docs
+
 
 ## 🧪 Testing
 
