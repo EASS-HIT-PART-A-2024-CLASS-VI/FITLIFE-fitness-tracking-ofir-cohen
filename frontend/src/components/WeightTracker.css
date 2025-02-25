@@ -75,7 +75,6 @@ input, select, button {
   margin: 20px auto;
 }
 
-/* Ensures calendar is in English */
 input[type="date"] {
   font-family: Arial, sans-serif;
   direction: ltr;

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./Login.css"; // Reusing styles for consistency
+import "./Login.css"; 
 import logo from "../assets/fitlife_logo.png";
 
 const Register = ({ onRegisterSuccess }) => {
