@@ -329,8 +329,11 @@ Click here to watch the demo video:
   </a>
 </p>
 
+---
 ## 👨‍💻 Author
 
 - **Name:** Ofir Cohen  
 - **Email:** ofircohen599@gmail.com
 - **GitHub:** [ofiz](https://github.com/ofiz)
+ ---
+Crafted with [💪 &  A lot of protein shakes] by a developer whose biceps are only outmatched by their coding skills!🏋️‍♂️
