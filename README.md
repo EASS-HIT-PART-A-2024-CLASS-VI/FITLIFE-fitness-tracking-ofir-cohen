@@ -66,7 +66,15 @@ fitlife-app/
 ```
 
 ---
+## 📋 Prerequisites
 
+Before setting up FitLife, ensure you have the following installed:
+
+- **Docker** and **Docker Compose** (version 20.10.0 or higher)
+- **Git** for cloning the repository
+- **Python 3.10+** for local development (optional)
+- **Node.js 18+** and **npm/yarn** for frontend development (optional)
+--- 
 ## 🛠️ Setting Up the Project
 
 ### 1️⃣ Clone the Repository
@@ -77,45 +85,49 @@ cd FITLIFE-fitness-tracking-ofir-cohen
 
 ## 2️⃣ Environment Configuration
 For the LLM Chatbot functionality (and more necessary environment variables for the project) you'll need to configure environment variables by following these steps:
+
 1. Visit [MISTRAL AI ](https://console.mistral.ai/) to obtain your API key.
-2. Create a `.env.example` file in the `backend` directory with:
+
+2. Generate a secure secret key:
+  ```bash
+
+openssl rand -hex 32
+  ```
+3. Create a `.env.example` file in the `backend` directory with:
 
 ```
 VARIABLE_1=your_value  # for api key
 VARIABLE_2=your_value  # for db url
 VARIABLE_3=your_value  # for secret key to db
 ```
-
-
-Copy the example file and replace with actual values:
+4. Copy the example file and replace with actual values:
 
   ```bash
 
 cp backend/.env.example backend/.env
    ```
 
-Update the values in your .env file:
+5. Update the values in your .env file:
 
 ```
-MISTRAL_API_KEY=your_api_key 
-DATABASE_URL=db_url
-SECRET_KEY=your_secret_key
+MISTRAL_API_KEY=your_mistral_api_key 
+DATABASE_URL=sqlite:///./fitness_tracker.db  #path to SQLite database (backend dir)
+SECRET_KEY=your_generated_secret_key
 
 ```
-(while inside the backend dir)load environment variables from the .env file:
+(while inside the backend dir) load environment variables from the .env file:
 
   ```bash
 export $(cat .env | xargs)
-echo 'MISTRAL_API_KEY=<YOUR_API_KEY>' 
+echo 'MISTRAL_API_KEY=<YOUR_API_KEY>'  #loads and displays the api key
 ```
 ### 3️⃣ Start the Application
   ```bash
 
-
 docker-compose up --build
 ```
 
-
+---
 ## 📚 Backend API
 
 ### 🔐 Authentication
@@ -144,13 +156,13 @@ docker-compose up --build
 
 ### 🤖 Fitness Bot
 - **POST /chatbot**: Ask fitness and nutrition questions
-
+---
 ## 🖥️ Frontend
 
 The React frontend provides an intuitive interface for accessing all FitLife features:
 
 ### **Login/Registration**
-Secure user authentication with JWT tokens and password protection
+Robust user authentication system with JWT token validation, bcrypt password hashing, and persistent sessions for a secure and frictionless experience.
 
 ### **Workout Tracker**
 Log exercise routines with duration tracking and history views
@@ -168,8 +180,9 @@ Personalized calorie targets based on height, weight, activity level and goals
 Download specialized workout plans for different fitness objectives
 
 ### **Fitness Bot**
-AI-powered fitness assistant for nutrition and exercise guidance
+State-of-the-art AI assistant powered by Mistral AI that provides evidence-based nutrition advice, exercise recommendations, and personalized fitness guidance through natural conversation.
 
+---
 ## 🤖 LLM Chatbot Microservice
 
 The FitLife application features an advanced AI-powered fitness assistant built on Mistral AI technology, implemented as a dedicated microservice:
@@ -210,6 +223,7 @@ The FitLife application features an advanced AI-powered fitness assistant built 
 - Nutritional advice based on dietary preferences and restrictions
 - Recovery strategies based on training intensity and frequency
 - Goal-specific fitness tracking recommendations
+ ---
 
 ## 💾 Database Design
 
@@ -242,7 +256,7 @@ FitLife uses SQLite as its database solution, providing a lightweight yet powerf
 - Password hashing with bcrypt
 - No storage of plaintext sensitive information
 - Row-level access control based on user authentication
-
+---
  ## Port Configuration
 
 ### Frontend
@@ -260,7 +274,7 @@ FitLife uses SQLite as its database solution, providing a lightweight yet powerf
 - **URL:** http://localhost:8001
 - **Swagger UI**: http://localhost:8001/docs
 
-
+---
 ## 🧪 Testing
 
 ### **Backend Tests**
@@ -280,8 +294,7 @@ FitLife uses SQLite as its database solution, providing a lightweight yet powerf
    cd frontend
    npm test
   ```
-
-
+---
 ## 🔧 Technologies Used
 
 ### **Backend**
@@ -301,7 +314,7 @@ FitLife uses SQLite as its database solution, providing a lightweight yet powerf
 - **Jest & React Testing Library**: Testing
 
 ### **AI & Intelligence**
-- **Mistral AI 7B:** Advanced large language model fine-tuned on fitness and nutrition 
+- **Mistral AI 7B:** Advanced **large language model** fine-tuned on fitness and nutrition 
 - **NLP Domain Adaptation:** Specialized understanding of exercise terminology and nutritional concepts
 - **Knowledge-Grounded AI:** Evidence-based recommendations aligned with fitness best practices
 
