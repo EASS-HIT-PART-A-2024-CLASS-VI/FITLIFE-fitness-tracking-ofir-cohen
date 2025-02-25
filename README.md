@@ -297,6 +297,25 @@ FitLife uses SQLite as its database solution, providing a lightweight yet powerf
 - **Chart.js:** Interactive data visualization
 - **Axios:** HTTP client for API requests
 - **Bootstrap:** Responsive UI components
+- **Tailwind CSS**: Utility-first styling
+- **Jest & React Testing Library**: Testing
+
+  ### **AI & Intelligence**
+- **Mistral AI 7B:** Advanced large language model fine-tuned on fitness and nutrition 
+- **NLP Domain Adaptation:** Specialized understanding of exercise terminology and nutritional concepts
+- **Knowledge-Grounded AI:** Evidence-based recommendations aligned with fitness best practices
+
+  ### **Data Storage Service**
+- **SQLite & SQLAlchemy:** Efficient ORM-based data persistence
+- **Migration Framework:** Seamless schema evolution and versioning
+- **Query Optimization:** Indexed fields and efficient query patterns
+- **Data Integrity:** Referential constraints and validation rules
+
+### **Deployment & Infrastructure**
+- **Docker**: Containerization
+- **Docker Compose:** Multi-container orchestration
+- **GitHub Actions**: Version Control Workflow
+- **Modular Architecture:** Scalable microservices design
 
 ---
 
