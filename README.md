@@ -3,7 +3,7 @@
 <div align="center">
  <img src="https://github.com/user-attachments/assets/a1b01939-021f-4df6-851a-221fb8026d9c" alt="logo" style="width: 150px;">
 
- A comprehensive fitness and nutrition tracking system to help users achieve their health goals.
+ **A comprehensive fitness and nutrition tracking system to help users achieve their health goals.**
 
  [![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi)](https://fastapi.tiangolo.com)
  [![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org)
