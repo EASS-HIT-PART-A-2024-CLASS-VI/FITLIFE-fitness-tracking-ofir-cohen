@@ -26,6 +26,17 @@ The **FitLife** application is a full-stack fitness tracking platform built with
 - **AI Fitness Bot**: Get answers to fitness and nutrition questions powered by LLM technology
 
 ---
+## 🎬 Demo
+
+Click here to watch the demo video:
+
+<p align="center">
+  <a href="https://youtu.be/0C77g-xDIg8">
+    <img src="./frontend/src/assets/demo.jpg" alt="Demo Video" width="700" height="400" />
+  </a>
+</p>
+
+---
 
 ## 🗂️ Project Architecture
 
@@ -84,7 +95,7 @@ cd FITLIFE-fitness-tracking-ofir-cohen
 ```
 
 ## 2️⃣ Environment Configuration
-For the LLM Chatbot functionality (and more necessary environment variables for the project) you'll need to configure environment variables by following these steps:
+For the LLM Chatbot functionality (and more necessary environment variables for the db) you'll need to configure environment variables by following these steps:
 
 1. Visit [MISTRAL AI ](https://console.mistral.ai/) to obtain your API key.
 
@@ -329,18 +340,6 @@ FitLife uses SQLite as its database solution, providing a lightweight yet powerf
 - **Docker Compose:** Multi-container orchestration
 - **GitHub Actions**: Version Control Workflow
 - **Modular Architecture:** Scalable microservices design
-
----
-
-## 🎬 Demo
-
-Click here to watch the demo video:
-
-<p align="center">
-  <a href="https://youtu.be/0C77g-xDIg8">
-    <img src="./frontend/src/assets/demo.jpg" alt="Demo Video" width="700" height="400" />
-  </a>
-</p>
 
 ---
 ## 👨‍💻 Author
