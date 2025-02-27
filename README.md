@@ -245,7 +245,6 @@ FitLife uses SQLite as its database solution, providing a lightweight yet powerf
 - **Workouts Table**: Records exercise sessions with duration, type, and date information
 - **Nutrition Logs**: Tracks food intake with calorie and nutritional information
 - **Weight Logs**: Stores weight measurements over time for progress tracking
-- **Training Programs**: References to downloadable fitness program PDFs
 
 ### **Key Relationships**
 - One-to-many relationship between users and workout logs
